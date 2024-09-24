@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0317F011-3555-42A7-9062-8A144B569678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaBaseAPI.Domain", "MangaBaseAPI.Domain\MangaBaseAPI.Domain.csproj", "{A112A0BE-5B34-49E1-8C22-8A5A0B1F4E02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaBaseAPI.Application", "MangaBaseAPI.Application\MangaBaseAPI.Application.csproj", "{D0E20EAA-6105-4EAC-9D19-F38544BB07A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{13237E72-DC12-483A-BCFD-5C62497FAC2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaBaseAPI.Infrastructure", "MangaBaseAPI.Infrastructure\MangaBaseAPI.Infrastructure.csproj", "{6AC2219E-3FD5-4FFC-BFEF-A68A4013C1D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaBaseAPI.Persistence", "MangaBaseAPI.Persistence\MangaBaseAPI.Persistence.csproj", "{757B2A4D-9DEE-4B80-82C7-61777A8C492D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{CB744C6F-9A85-4A51-A20A-57CB38106D67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaBaseAPI.WebAPI", "MangaBaseAPI.WebAPI\MangaBaseAPI.WebAPI.csproj", "{43831EF3-63DA-40A3-B28A-A5FF33049E2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A112A0BE-5B34-49E1-8C22-8A5A0B1F4E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A112A0BE-5B34-49E1-8C22-8A5A0B1F4E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A112A0BE-5B34-49E1-8C22-8A5A0B1F4E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A112A0BE-5B34-49E1-8C22-8A5A0B1F4E02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E20EAA-6105-4EAC-9D19-F38544BB07A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E20EAA-6105-4EAC-9D19-F38544BB07A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E20EAA-6105-4EAC-9D19-F38544BB07A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E20EAA-6105-4EAC-9D19-F38544BB07A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AC2219E-3FD5-4FFC-BFEF-A68A4013C1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AC2219E-3FD5-4FFC-BFEF-A68A4013C1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AC2219E-3FD5-4FFC-BFEF-A68A4013C1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AC2219E-3FD5-4FFC-BFEF-A68A4013C1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{757B2A4D-9DEE-4B80-82C7-61777A8C492D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{757B2A4D-9DEE-4B80-82C7-61777A8C492D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{757B2A4D-9DEE-4B80-82C7-61777A8C492D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{757B2A4D-9DEE-4B80-82C7-61777A8C492D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43831EF3-63DA-40A3-B28A-A5FF33049E2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43831EF3-63DA-40A3-B28A-A5FF33049E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43831EF3-63DA-40A3-B28A-A5FF33049E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43831EF3-63DA-40A3-B28A-A5FF33049E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A112A0BE-5B34-49E1-8C22-8A5A0B1F4E02} = {0317F011-3555-42A7-9062-8A144B569678}
+		{D0E20EAA-6105-4EAC-9D19-F38544BB07A7} = {0317F011-3555-42A7-9062-8A144B569678}
+		{6AC2219E-3FD5-4FFC-BFEF-A68A4013C1D1} = {13237E72-DC12-483A-BCFD-5C62497FAC2E}
+		{757B2A4D-9DEE-4B80-82C7-61777A8C492D} = {13237E72-DC12-483A-BCFD-5C62497FAC2E}
+		{43831EF3-63DA-40A3-B28A-A5FF33049E2F} = {CB744C6F-9A85-4A51-A20A-57CB38106D67}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD5DA6B7-897F-4645-9973-902409AACC32}
+	EndGlobalSection
+EndGlobal
