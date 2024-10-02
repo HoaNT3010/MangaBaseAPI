@@ -5,26 +5,18 @@ using MangaBaseAPI.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddWebApi();
-builder.Services.AddPersistence(connectionString);
-builder.Services.AddApplication();
-builder.Services.AddIdentityCore();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    builder.Services.AddWebApi()
+    .AddPersistence(connectionString!)
+    .AddApplication()
+    .AddIdentityCore();
 }
 
+var app = builder.Build();
 {
-    app.UseHttpsRedirection();
+    app.AddSwagger();
 
-    app.UseAuthorization();
-
-    app.MapControllers();
+    app.RegisterPipelines();
 
     app.Run();
 }
