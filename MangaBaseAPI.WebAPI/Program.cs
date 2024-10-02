@@ -1,11 +1,15 @@
 using MangaBaseAPI.WebAPI;
 using MangaBaseAPI.Persistence;
+using MangaBaseAPI.Application;
+using MangaBaseAPI.Infrastructure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddWebApi();
 builder.Services.AddPersistence(connectionString);
+builder.Services.AddApplication();
+builder.Services.AddIdentityCore();
 
 var app = builder.Build();
 
@@ -15,10 +19,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+{
+    app.UseHttpsRedirection();
 
-app.UseAuthorization();
+    app.UseAuthorization();
 
-app.MapControllers();
+    app.MapControllers();
 
-app.Run();
+    app.Run();
+}

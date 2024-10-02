@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,7 +27,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MangaBaseAPI.Application\MangaBaseAPI.Application.csproj" />
+    <ProjectReference Include="..\MangaBaseAPI.Contracts\MangaBaseAPI.Contracts.csproj" />
+    <ProjectReference Include="..\MangaBaseAPI.Infrastructure\MangaBaseAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\MangaBaseAPI.Persistence\MangaBaseAPI.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

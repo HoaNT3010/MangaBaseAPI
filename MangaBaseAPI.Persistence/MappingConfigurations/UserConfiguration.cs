@@ -33,7 +33,7 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                    Email = "hoa41300@gmail.com",
                    NormalizedEmail = "hoa41300@gmail.com",
                    LockoutEnabled = false,
-                   PasswordHash = "AQAAAAEAACcQAAAAELBcKuXWkiRQEYAkD/qKs9neac5hxWs3bkegIHpGLtf+zFHuKnuI3lBqkWO9TMmFAQ==",   // v*7Un8b4rcN@<-RN
+                   PasswordHash = "AQAAAAIAAYagAAAAENX7BIlY1gy8Getg2rmVWj0zLEDmvNY8m7TEJETG6JYBfWbiKN41/MgUaiU8N03GRw==",   // 111111
                    SecurityStamp = "5M2QLL65J6H6VFIS7VZETKXY27KNVVYJ",
                    FirstName = "Hòa",
                    LastName = "Nguyễn Thái"

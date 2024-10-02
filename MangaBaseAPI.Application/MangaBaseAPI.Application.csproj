@@ -6,4 +6,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication\Commands\" />
+    <Folder Include="Authentication\Common\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MangaBaseAPI.Domain\MangaBaseAPI.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
