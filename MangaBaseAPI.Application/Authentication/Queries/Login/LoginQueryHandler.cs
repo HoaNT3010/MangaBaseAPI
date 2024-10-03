@@ -34,7 +34,6 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
                 return null;
             }
             return user;
-            //throw new NotImplementedException();
         }
     }
 }

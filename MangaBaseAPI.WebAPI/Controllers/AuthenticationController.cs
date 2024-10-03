@@ -1,6 +1,5 @@
 ﻿using MangaBaseAPI.Application.Authentication.Queries.Login;
 using MangaBaseAPI.Contracts.Authentication.Login;
-using MangaBaseAPI.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

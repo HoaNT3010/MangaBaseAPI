@@ -7,16 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 {
     builder.Services.AddWebApi()
-    .AddPersistence(connectionString!)
-    .AddApplication()
-    .AddIdentityCore();
+        .AddGlobalErrorHandling()
+        .AddPersistence(connectionString!)
+        .AddApplication()
+        .AddIdentityCore();
 }
 
 var app = builder.Build();
 {
-    app.AddSwagger();
-
-    app.RegisterPipelines();
+    app.AddSwagger()
+        .RegisterPipelines()
+        .UseGlobalErrorHandling();
 
     app.Run();
 }

@@ -33,8 +33,4 @@
     <ProjectReference Include="..\MangaBaseAPI.Persistence\MangaBaseAPI.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>

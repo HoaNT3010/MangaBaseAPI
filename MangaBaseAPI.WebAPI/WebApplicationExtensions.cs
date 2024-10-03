@@ -23,5 +23,12 @@
 
             return application;
         }
+
+        public static WebApplication UseGlobalErrorHandling(this WebApplication application)
+        {
+            application.UseExceptionHandler();
+
+            return application;
+        }
     }
 }
