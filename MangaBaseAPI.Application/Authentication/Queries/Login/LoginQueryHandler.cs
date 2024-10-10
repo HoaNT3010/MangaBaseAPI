@@ -1,11 +1,13 @@
-﻿using MangaBaseAPI.Domain.Entities;
+﻿using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Entities;
+using MangaBaseAPI.Domain.Errors.Authentication;
 using MangaBaseAPI.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace MangaBaseAPI.Application.Authentication.Queries.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, User?>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, Result<User>>
     {
         private readonly UserManager<User> _userManager;
         private readonly IPasswordHasher _passwordHasher;
@@ -18,22 +20,20 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<User?> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<Result<User>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null)
             {
-                Console.WriteLine("Cannot find user with email");
-                return null; 
+                return Result.Failure<User>(LoginErrors.InvalidCredentials);
             }
 
             bool isCorrectPassword = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash!, request.Password);
             if (!isCorrectPassword) 
             {
-                Console.WriteLine("Wrong password!");
-                return null;
+                return Result.Failure<User>(LoginErrors.InvalidCredentials);
             }
-            return user;
+            return Result.Success(user);
         }
     }
 }

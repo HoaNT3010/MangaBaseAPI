@@ -1,5 +1,6 @@
 ﻿using MangaBaseAPI.Application.Authentication.Queries.Login;
 using MangaBaseAPI.Contracts.Authentication.Login;
+using MangaBaseAPI.WebAPI.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,13 +19,13 @@ namespace MangaBaseAPI.WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IResult> Login(LoginRequest request)
         {
             var query = new LoginQuery(request.Email, request.Password);
 
-            var loginResult = await _mediator.Send(query);
+            var result = await _mediator.Send(query);
 
-            return loginResult == null ? BadRequest() : Ok(loginResult);
+            return result.IsSuccess ? Results.Ok(result) : result.ToProblemDetails();
         }
     }
 }
