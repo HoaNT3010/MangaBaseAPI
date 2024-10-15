@@ -1,17 +1,19 @@
-﻿namespace MangaBaseAPI.Domain.Abstractions
+﻿using System.Text.Json.Serialization;
+
+namespace MangaBaseAPI.Domain.Abstractions
 {
     public class Result
     {
         protected internal Result(bool isSuccess, Error error)
         {
-            if (isSuccess && error != Error.None)
+            if ((isSuccess && error != Error.None) && (isSuccess && error != Error.Null))
             {
-                throw new InvalidOperationException("Cannot create success result with error");
+                throw new InvalidOperationException("Cannot create success result with error 1");
             }
 
-            if (!isSuccess && error == Error.None)
+            if ((!isSuccess && error == Error.None) && (!isSuccess && error == Error.Null))
             {
-                throw new InvalidOperationException("Cannot create failed result with no error");
+                throw new InvalidOperationException("Cannot create failed result with no error 2");
             }
 
             IsSuccess = isSuccess;
@@ -22,11 +24,16 @@
 
         public bool IsFailure => !IsSuccess;
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Error Error { get; }
 
         public static Result Success() => new(true, Error.None);
 
         public static Result<TValue> Success<TValue>(TValue value) => new(value, true, Error.None);
+
+        public static Result SuccessNullError() => new(true, Error.Null);
+
+        public static Result<TValue> SuccessNullError<TValue>(TValue value) => new(value, true, Error.Null);
 
         public static Result Failure(Error error) => new(false, error);
 

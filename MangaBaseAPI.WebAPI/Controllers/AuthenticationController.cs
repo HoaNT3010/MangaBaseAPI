@@ -19,13 +19,13 @@ namespace MangaBaseAPI.WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
             var query = new LoginQuery(request.Email, request.Password);
 
             var result = await _mediator.Send(query);
 
-            return result.IsSuccess ? Results.Ok(result) : result.ToProblemDetails();
+            return result.IsSuccess ? Ok(result) : this.HandleFailure(result);
         }
     }
 }

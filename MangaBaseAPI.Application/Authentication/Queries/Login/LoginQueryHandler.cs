@@ -33,7 +33,7 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
             {
                 return Result.Failure<User>(LoginErrors.InvalidCredentials);
             }
-            return Result.Success(user);
+            return Result.SuccessNullError(user);
         }
     }
 }

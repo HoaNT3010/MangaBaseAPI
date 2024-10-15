@@ -2,7 +2,8 @@
 {
     public record Error
     {
-        public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
+        public static readonly Error? Null = null;
+        public static readonly Error None = new(string.Empty, string.Empty, ErrorType.None);
         public static readonly Error NullValue = new("Error.NullValue", "Null value was provided", ErrorType.Failure);
         public static readonly Error ConditionNotMet = new("Error.ConditionNotMet", "The specified condition was not met", ErrorType.Failure);
 
@@ -37,10 +38,11 @@
 
     public enum ErrorType
     {
-        Failure = 0,
-        Validation = 1,
-        NotFound = 2,
-        Conflict = 3,
-        Unauthorized = 4,
+        None = 0,
+        Failure = 1,
+        Validation = 2,
+        NotFound = 3,
+        Conflict = 4,
+        Unauthorized = 5,
     }
 }

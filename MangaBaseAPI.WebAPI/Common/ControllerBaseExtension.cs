@@ -1,24 +1,53 @@
 ﻿using MangaBaseAPI.Domain.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MangaBaseAPI.WebAPI.Common
 {
-    public static class ResultExtensions
+    public static class ControllerBaseExtension
     {
-        public static IResult ToProblemDetails(this Result result)
+        public static IActionResult HandleFailure(this ControllerBase controllerBase, Result result) =>
+            result switch
+            {
+                { IsSuccess: true } => throw new InvalidOperationException(),
+                IValidationResult validationResult => controllerBase.BadRequest(
+                    CreateProblemDetails(
+                        "Validation Error(s)",
+                        StatusCodes.Status400BadRequest,
+                        result.Error,
+                        validationResult.Errors)),
+                //_ => controllerBase.BadRequest(
+                //    CreateProblemDetails(
+                //        "Bad Request",
+                //        StatusCodes.Status400BadRequest, result.Error))
+                _ => controllerBase.ToProblemDetails(result)
+            };
+
+        private static ProblemDetails CreateProblemDetails(
+            string title,
+            int status,
+            Error error,
+            Error[]? errors = null) =>
+            new()
+            {
+                Title = title,
+                Type = error.Code,
+                Detail = error.Description,
+                Status = status,
+                Extensions = { { nameof(errors), errors } }
+            };
+
+        private static IActionResult ToProblemDetails(this ControllerBase controllerBase, Result result)
         {
             if (result.IsSuccess)
             {
                 throw new InvalidOperationException("Cannot create ProblemDetails from successful result");
             }
 
-            return Results.Problem(
+            return controllerBase.Problem(
                 statusCode: GetStatusCode(result.Error.Type),
                 title: GetTitle(result.Error.Type),
                 type: GetType(result.Error.Type),
-                extensions: new Dictionary<string, object?>
-                {
-                    { "errors", new[] { result.Error } }
-                });
+                detail: (string)result.Error.Description);
 
             static int GetStatusCode(ErrorType errorType) =>
                 errorType switch
