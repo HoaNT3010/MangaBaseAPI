@@ -1,5 +1,5 @@
-﻿using MangaBaseAPI.Domain.Entities;
-using MangaBaseAPI.Domain.Identity;
+﻿using MangaBaseAPI.CrossCuttingConcerns.Identity;
+using MangaBaseAPI.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MangaBaseAPI.Infrastructure.Identity

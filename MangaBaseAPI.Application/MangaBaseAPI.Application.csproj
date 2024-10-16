@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MangaBaseAPI.CrossCuttingConcerns\MangaBaseAPI.CrossCuttingConcerns.csproj" />
     <ProjectReference Include="..\MangaBaseAPI.Domain\MangaBaseAPI.Domain.csproj" />
   </ItemGroup>
 

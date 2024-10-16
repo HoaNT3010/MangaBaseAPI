@@ -1,7 +1,7 @@
-﻿using MangaBaseAPI.Domain.Abstractions;
+﻿using MangaBaseAPI.CrossCuttingConcerns.Identity;
+using MangaBaseAPI.Domain.Abstractions;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Authentication;
-using MangaBaseAPI.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

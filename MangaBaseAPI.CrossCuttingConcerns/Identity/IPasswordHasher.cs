@@ -1,6 +1,6 @@
 ﻿using MangaBaseAPI.Domain.Entities;
 
-namespace MangaBaseAPI.Domain.Identity
+namespace MangaBaseAPI.CrossCuttingConcerns.Identity
 {
     public interface IPasswordHasher
     {
