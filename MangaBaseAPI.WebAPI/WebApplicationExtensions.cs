@@ -20,7 +20,6 @@
                 application.UseSwagger();
                 application.UseSwaggerUI();
             }
-
             return application;
         }
 

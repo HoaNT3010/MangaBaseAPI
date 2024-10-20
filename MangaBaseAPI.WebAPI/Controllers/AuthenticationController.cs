@@ -2,6 +2,7 @@
 using MangaBaseAPI.Contracts.Authentication.Login;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MangaBaseAPI.WebAPI.Controllers
@@ -18,7 +19,13 @@ namespace MangaBaseAPI.WebAPI.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// API endpoint user to login into the system with email and password
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var query = new LoginQuery(request.Email, request.Password);

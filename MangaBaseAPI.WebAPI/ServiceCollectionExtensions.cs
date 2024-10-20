@@ -13,7 +13,6 @@ namespace MangaBaseAPI.WebAPI
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
 
             return services;
         }
