@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MangaBaseAPI.CrossCuttingConcerns\MangaBaseAPI.CrossCuttingConcerns.csproj" />
-    <ProjectReference Include="..\MangaBaseAPI.Domain\MangaBaseAPI.Domain.csproj" />
-    <ProjectReference Include="..\MangaBaseAPI.Persistence\MangaBaseAPI.Persistence.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Jwt\" />
+    <ProjectReference Include="..\MangaBaseAPI.CrossCuttingConcerns\MangaBaseAPI.CrossCuttingConcerns.csproj" />
+    <ProjectReference Include="..\MangaBaseAPI.Domain\MangaBaseAPI.Domain.csproj" />
+    <ProjectReference Include="..\MangaBaseAPI.Persistence\MangaBaseAPI.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
