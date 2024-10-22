@@ -10,6 +10,12 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
         {
             builder.ToTable("Users");
 
+            builder.HasIndex(x => x.Email)
+                .IsUnique();
+
+            builder.HasIndex(x => x.UserName)
+                .IsUnique();
+
             builder.Property(x => x.Id)
                 .HasDefaultValueSql("newsequentialid()");
 

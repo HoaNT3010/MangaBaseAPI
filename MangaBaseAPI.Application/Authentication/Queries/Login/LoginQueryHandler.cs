@@ -2,6 +2,7 @@
 using MangaBaseAPI.CrossCuttingConcerns.Identity;
 using MangaBaseAPI.CrossCuttingConcerns.Jwt;
 using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.User;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Authentication;
 using MediatR;
@@ -34,19 +35,28 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
             }
 
             bool isCorrectPassword = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash!, request.Password);
-            if (!isCorrectPassword) 
+            if (!isCorrectPassword)
             {
                 return Result.Failure<LoginResponse>(LoginErrors.InvalidCredentials);
             }
 
-            string accessToken = _jwtTokenProvider.GenerateAccessToken(user, new List<string>());
+            // Update user's refresh token
             string refreshToken = _jwtTokenProvider.GenerateRefreshToken();
+            string accessToken = _jwtTokenProvider.GenerateAccessToken(user, new List<string>());
+
+            var tokenUpdate = await _userManager.SetAuthenticationTokenAsync(user, UserTokenConstants.JwtLoginProvider, UserTokenConstants.JwtRefreshTokenName, refreshToken);
+
+            if (!tokenUpdate.Succeeded) 
+            {
+                return Result.Failure<LoginResponse>(LoginErrors.UpdateRefreshTokenFailed);
+            }
 
             var loginResponse = new LoginResponse()
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
             };
+
             return Result.SuccessNullError(loginResponse);
         }
     }

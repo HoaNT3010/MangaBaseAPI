@@ -1,6 +1,5 @@
 ﻿using MangaBaseAPI.Contracts.Authentication.Login;
 using MangaBaseAPI.Domain.Abstractions;
-using MangaBaseAPI.Domain.Entities;
 using MediatR;
 
 namespace MangaBaseAPI.Application.Authentication.Queries.Login
