@@ -1,9 +1,37 @@
 ﻿using MangaBaseAPI.Domain.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MangaBaseAPI.WebAPI.Common
 {
     public static class ResultExtensions
     {
+        public static IResult HandleFailure(Result result) =>
+            result switch
+            {
+                { IsSuccess: true } => throw new InvalidOperationException(),
+                IValidationResult validationResult => Results.BadRequest(
+                    CreateProblemDetails(
+                        "Validation Error(s)",
+                        StatusCodes.Status400BadRequest,
+                        result.Error,
+                        validationResult.Errors)),
+                _ => result.ToProblemDetails()
+            };
+
+        private static ProblemDetails CreateProblemDetails(
+            string title,
+            int status,
+            Error error,
+            Error[]? errors = null) =>
+            new()
+            {
+                Title = title,
+                Type = error.Code,
+                Detail = error.Description,
+                Status = status,
+                Extensions = { { nameof(errors), errors } }
+            };
+
         public static IResult ToProblemDetails(this Result result)
         {
             if (result.IsSuccess)
@@ -15,6 +43,7 @@ namespace MangaBaseAPI.WebAPI.Common
                 statusCode: GetStatusCode(result.Error.Type),
                 title: GetTitle(result.Error.Type),
                 type: GetType(result.Error.Type),
+                detail: result.Error.Description,
                 extensions: new Dictionary<string, object?>
                 {
                     { "errors", new[] { result.Error } }

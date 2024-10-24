@@ -1,4 +1,5 @@
-﻿using MangaBaseAPI.WebAPI.Common;
+﻿using Carter;
+using MangaBaseAPI.WebAPI.Common;
 using System.Text.Json.Serialization;
 
 namespace MangaBaseAPI.WebAPI
@@ -13,6 +14,8 @@ namespace MangaBaseAPI.WebAPI
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
             services.AddEndpointsApiExplorer();
+
+            services.AddCarter();
 
             return services;
         }

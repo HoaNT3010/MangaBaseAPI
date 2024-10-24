@@ -1,4 +1,6 @@
-﻿namespace MangaBaseAPI.WebAPI
+﻿using Carter;
+
+namespace MangaBaseAPI.WebAPI
 {
     public static class WebApplicationExtensions
     {
@@ -9,6 +11,8 @@
             application.UseAuthorization();
 
             application.MapControllers();
+
+            application.MapCarter();
 
             return application;
         }
