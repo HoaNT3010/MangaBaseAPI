@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Asp.Versioning.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -21,23 +22,43 @@ namespace MangaBaseAPI.Infrastructure.Swagger
         const string BearerTokenSchemeFormat = "JWT";
         const string BearerTokenScheme = "Bearer";
 
+        private readonly IApiVersionDescriptionProvider _provider;
+
+        public SwaggerOptionsSetup(IApiVersionDescriptionProvider provider)
+        {
+            _provider = provider;
+        }
+
         public void Configure(SwaggerGenOptions options)
         {
-            // Configure Swagger documentation for the specified API version
-            options.SwaggerDoc(SwaggerApiVersion,
-                new OpenApiInfo
+            foreach (ApiVersionDescription description in _provider.ApiVersionDescriptions)
+            {
+                var openApiInfo = new OpenApiInfo
                 {
-                    Title = SwaggerApiTitle,
-                    Version = SwaggerApiVersion,
+                    Title = $"{SwaggerApiTitle} v{description.ApiVersion}",
+                    Version = description.ApiVersion.ToString(),
                     Description = SwaggerApiDescription,
-                });
+                };
+
+                options.SwaggerDoc(description.GroupName, openApiInfo);
+
+            }
+
+            // Configure Swagger documentation for the specified API version
+            //options.SwaggerDoc(SwaggerApiVersion,
+            //    new OpenApiInfo
+            //    {
+            //        Title = SwaggerApiTitle,
+            //        Version = SwaggerApiVersion,
+            //        Description = SwaggerApiDescription,
+            //    });
 
             // Include XML comments from the assembly for API documentation
-            var webApiAssembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == WebApiProjectName);
+            //var webApiAssembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == WebApiProjectName);
 
-            string xmlFile = $"{webApiAssembly!.GetName().Name}.xml";
-            string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath, true);
+            //string xmlFile = $"{webApiAssembly!.GetName().Name}.xml";
+            //string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //options.IncludeXmlComments(xmlPath, true);
 
             // Add security definition for JWT Bearer Token
             options.AddSecurityDefinition(BearerTokenName,

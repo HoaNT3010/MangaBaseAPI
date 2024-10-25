@@ -1,4 +1,5 @@
-﻿using Carter;
+﻿using Asp.Versioning;
+using Carter;
 using MangaBaseAPI.WebAPI.Common;
 using System.Text.Json.Serialization;
 
@@ -17,6 +18,8 @@ namespace MangaBaseAPI.WebAPI
 
             services.AddCarter();
 
+            services.ConfigureApiVersioning();
+
             return services;
         }
 
@@ -29,6 +32,23 @@ namespace MangaBaseAPI.WebAPI
                 {
                     context.ProblemDetails.Extensions["traceId"] = context.HttpContext.TraceIdentifier;
                 };
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureApiVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+                options.ReportApiVersions = true;
+            })
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
             });
 
             return services;

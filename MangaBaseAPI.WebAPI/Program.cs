@@ -30,8 +30,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 var app = builder.Build();
 {
-    app.AddSwagger()
-        .RegisterPipelines()
+    app.RegisterPipelines()
+        .AddSwagger()
         .UseGlobalErrorHandling();
 
     app.Run();

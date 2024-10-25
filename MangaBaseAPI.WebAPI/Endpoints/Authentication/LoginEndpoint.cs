@@ -10,22 +10,24 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("api/auth/login", Login)
+            app.MapPost("auth/login", Login)
                 .WithTags("Authentication")
-                .WithOpenApi(op => new(op)
+                .WithOpenApi(operation => new(operation)
                 {
                     Summary = "Logs user into the system",
                     Description = "Endpoint for user to log into the system using email and password"
-                });
+                })
+                .MapToApiVersion(1);
         }
 
         public static async Task<IResult> Login(
             LoginRequest loginRequest,
-            ISender sender)
+            ISender sender,
+            CancellationToken cancellationToken)
         {
             var query = new LoginQuery(loginRequest.Email, loginRequest.Password);
 
-            var result = await sender.Send(query);
+            var result = await sender.Send(query, cancellationToken);
 
             return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
         }
