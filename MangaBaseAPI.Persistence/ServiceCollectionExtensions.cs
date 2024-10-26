@@ -1,4 +1,6 @@
 ﻿using MangaBaseAPI.Domain.Entities;
+using MangaBaseAPI.Domain.Repositories;
+using MangaBaseAPI.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,14 @@ namespace MangaBaseAPI.Persistence
             .AddEntityFrameworkStores<MangaBaseDbContext>()
             .AddDefaultTokenProviders();
 
+            services.AddUnitOfWork();
+
+            return services;
+        }
+
+        private static IServiceCollection AddUnitOfWork(this IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             return services;
         }
     }
