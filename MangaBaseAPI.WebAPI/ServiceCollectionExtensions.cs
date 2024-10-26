@@ -1,6 +1,8 @@
 ﻿using Asp.Versioning;
 using Carter;
 using MangaBaseAPI.WebAPI.Common;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
 namespace MangaBaseAPI.WebAPI
@@ -19,6 +21,16 @@ namespace MangaBaseAPI.WebAPI
             services.AddCarter();
 
             services.ConfigureApiVersioning();
+
+            // Serialize enum as string
+            services.ConfigureHttpJsonOptions(options =>
+            {
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+            services.Configure<JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
             return services;
         }
