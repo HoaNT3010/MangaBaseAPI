@@ -6,7 +6,7 @@ namespace MangaBaseAPI.Persistence.Repositories
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly MangaBaseDbContext _context;
-        private readonly DbSet<TEntity> _dbSet;
+        protected readonly DbSet<TEntity> _dbSet;
 
         public Repository(MangaBaseDbContext context)
         {

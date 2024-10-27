@@ -1,16 +1,19 @@
 ﻿using MangaBaseAPI.Domain.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MangaBaseAPI.Persistence.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly MangaBaseDbContext _context;
-        private readonly Dictionary<string, object> _repositories;
+        private readonly IServiceProvider _serviceProvider;
 
-        public UnitOfWork(MangaBaseDbContext context)
+        public UnitOfWork(
+            MangaBaseDbContext context,
+            IServiceProvider serviceProvider)
         {
             _context = context;
-            _repositories = new Dictionary<string, object>();
+            _serviceProvider = serviceProvider;
         }
 
         public async Task BeginTransactionAsync()
@@ -28,15 +31,9 @@ namespace MangaBaseAPI.Persistence.Repositories
             _context.Dispose();
         }
 
-        public IRepository<TEntity> Repository<TEntity>() where TEntity : class
+        public TRepository GetRepository<TRepository>() where TRepository : class
         {
-            var type = typeof(TEntity).Name;
-            if (!_repositories.ContainsKey(type))
-            {
-                var repositoryInstance = new Repository<TEntity>(_context);
-                _repositories.Add(type, repositoryInstance);
-            }
-            return (IRepository<TEntity>)_repositories[type];
+            return _serviceProvider.GetRequiredService<TRepository>();
         }
 
         public async Task RollbackTransactionAsync()

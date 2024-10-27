@@ -40,6 +40,10 @@ namespace MangaBaseAPI.Persistence
         private static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Add repositories
+            services.AddScoped<IUserTokenRepository, UserTokenRepository>();
+
             return services;
         }
     }
