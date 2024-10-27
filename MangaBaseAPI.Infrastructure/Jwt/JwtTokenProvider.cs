@@ -12,6 +12,7 @@ namespace MangaBaseAPI.Infrastructure.Jwt
     public class JwtTokenProvider : IJwtTokenProvider
     {
         const string JwtUserNameClaimType = "username";
+        const string JwtExpirationClaimType = "exp";
 
         readonly JwtOptions _jwtOptions;
 
@@ -52,12 +53,42 @@ namespace MangaBaseAPI.Infrastructure.Jwt
 
         public string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            var claims = new List<Claim>()
             {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var creds = new SigningCredentials(
+                new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+                SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(Convert.ToDouble(_jwtOptions.RefreshTokenExpiryDays)),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public bool IsTokenInvalidOrExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            if (tokenHandler.CanReadToken(token))
+            {
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+                var expirationDateUnix = jwtToken.Claims.FirstOrDefault(claim => claim.Type == JwtExpirationClaimType)?.Value;
+
+                if (expirationDateUnix != null && long.TryParse(expirationDateUnix, out long expUnix))
+                {
+                    var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime;
+                    return expirationDate < DateTime.UtcNow;
+                }
             }
+            // Token is invalid or missing expiration
+            return true;
         }
     }
 }
