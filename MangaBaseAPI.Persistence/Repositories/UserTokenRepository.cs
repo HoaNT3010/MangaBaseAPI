@@ -16,5 +16,16 @@ namespace MangaBaseAPI.Persistence.Repositories
                 .Select(x => x.UserId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<bool> TryRemoveTokenByValueAsync(string tokenValue)
+        {
+            var userToken = await FirstOrDefaultAsync(_dbSet.Where(x => x.Value == tokenValue));
+            if (userToken == default)
+            {
+                return false;
+            }
+            _dbSet.Remove(userToken!);
+            return true;
+        }
     }
 }

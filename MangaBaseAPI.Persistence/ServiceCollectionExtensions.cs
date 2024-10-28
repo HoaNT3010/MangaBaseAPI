@@ -42,6 +42,13 @@ namespace MangaBaseAPI.Persistence
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Add repositories
+            services.AddRepositories();
+
+            return services;
+        }
+
+        private static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
             services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 
             return services;
