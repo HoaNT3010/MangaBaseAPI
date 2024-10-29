@@ -1,4 +1,5 @@
-﻿using MangaBaseAPI.Domain.Repositories;
+﻿using MangaBaseAPI.Domain.Abstractions.Specification;
+using MangaBaseAPI.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace MangaBaseAPI.Persistence.Repositories
@@ -62,6 +63,13 @@ namespace MangaBaseAPI.Persistence.Repositories
         public void UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
+        }
+
+        public IQueryable<TEntity> ApplySpecification(Specification<TEntity> specification)
+        {
+            return SpecificationEvaluator.GetQuery(
+                GetQueryableSet(),
+                specification);
         }
     }
 }

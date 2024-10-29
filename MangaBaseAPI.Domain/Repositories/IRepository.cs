@@ -1,4 +1,6 @@
-﻿namespace MangaBaseAPI.Domain.Repositories
+﻿using MangaBaseAPI.Domain.Abstractions.Specification;
+
+namespace MangaBaseAPI.Domain.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
@@ -21,5 +23,8 @@
         void BulkUpdate(IEnumerable<TEntity> entities);
 
         void BulkDelete(IEnumerable<TEntity> entities);
+
+        IQueryable<TEntity> ApplySpecification(
+            Specification<TEntity> specification);
     }
 }
