@@ -1,0 +1,6 @@
+services:
+  mangabaseapi.webapi:
+    image: ${DOCKER_REGISTRY-}mangabaseapiwebapi
+    build:
+      context: .
+      dockerfile: MangaBaseAPI.WebAPI/Dockerfile
