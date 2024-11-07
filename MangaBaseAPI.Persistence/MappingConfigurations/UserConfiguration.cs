@@ -35,9 +35,9 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                {
                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                    UserName = "GibleBC2",
-                   NormalizedUserName = "giblebc2",
+                   NormalizedUserName = "GIBLEBC2",
                    Email = "hoa41300@gmail.com",
-                   NormalizedEmail = "hoa41300@gmail.com",
+                   NormalizedEmail = "HOA41300@GMAIL.COM",
                    LockoutEnabled = false,
                    PasswordHash = "AQAAAAIAAYagAAAAENX7BIlY1gy8Getg2rmVWj0zLEDmvNY8m7TEJETG6JYBfWbiKN41/MgUaiU8N03GRw==",   // 111111
                    SecurityStamp = "5M2QLL65J6H6VFIS7VZETKXY27KNVVYJ",

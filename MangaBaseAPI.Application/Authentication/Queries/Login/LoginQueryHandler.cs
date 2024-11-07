@@ -41,8 +41,9 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
             }
 
             // Update user's refresh token
+            IList<string> roles = await _userManager.GetRolesAsync(user);
             string refreshToken = _jwtTokenProvider.GenerateRefreshToken();
-            string accessToken = _jwtTokenProvider.GenerateAccessToken(user, new List<string>());
+            string accessToken = _jwtTokenProvider.GenerateAccessToken(user, roles);
 
             var tokenUpdate = await _userManager.SetAuthenticationTokenAsync(user, UserTokenConstants.JwtLoginProvider, UserTokenConstants.JwtRefreshTokenName, refreshToken);
 

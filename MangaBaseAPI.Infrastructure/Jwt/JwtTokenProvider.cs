@@ -13,6 +13,7 @@ namespace MangaBaseAPI.Infrastructure.Jwt
     {
         const string JwtUserNameClaimType = "username";
         const string JwtExpirationClaimType = "exp";
+        const string JwtRoleClaimType = "roles";
 
         readonly JwtOptions _jwtOptions;
 
@@ -33,7 +34,7 @@ namespace MangaBaseAPI.Infrastructure.Jwt
 
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim(JwtRoleClaimType, role));
             }
 
             var creds = new SigningCredentials(
