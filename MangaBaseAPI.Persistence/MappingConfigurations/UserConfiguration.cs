@@ -42,7 +42,7 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                    PasswordHash = "AQAAAAIAAYagAAAAENX7BIlY1gy8Getg2rmVWj0zLEDmvNY8m7TEJETG6JYBfWbiKN41/MgUaiU8N03GRw==",   // 111111
                    SecurityStamp = "5M2QLL65J6H6VFIS7VZETKXY27KNVVYJ",
                    FirstName = "Hòa",
-                   LastName = "Nguyễn Thái"
+                   LastName = "Nguyễn Thái",
                }
             });
         }
