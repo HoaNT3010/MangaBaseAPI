@@ -16,6 +16,7 @@ namespace MangaBaseAPI.Application
             });
 
             services.AddFluentValidationPipeline();
+            services.AddLoggingPipelineBehavior();
 
             return services;
         }
@@ -27,6 +28,15 @@ namespace MangaBaseAPI.Application
                 typeof(ValidationBehavior<,>));
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
+
+            return services;
+        }
+
+        private static IServiceCollection AddLoggingPipelineBehavior(this IServiceCollection services)
+        {
+            services.AddScoped(
+                typeof(IPipelineBehavior<,>),
+                typeof(LoggingPipelineBehavior<,>));
 
             return services;
         }

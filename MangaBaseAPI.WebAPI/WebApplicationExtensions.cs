@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning.Builder;
 using Asp.Versioning;
 using Carter;
+using Serilog;
 
 namespace MangaBaseAPI.WebAPI
 {
@@ -13,6 +14,8 @@ namespace MangaBaseAPI.WebAPI
             application.UseAuthorization();
 
             application.MapMinimalApiEndpoints();
+
+            application.UseSerilogRequestLogging();
 
             return application;
         }

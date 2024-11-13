@@ -78,9 +78,6 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
             catch (Exception)
             {
                 await _unitOfWork.RollbackTransactionAsync();
-
-                // Need to implement logging!
-
                 return Result.Failure(RegisterErrors.UnexpectedError);
             }
 
