@@ -18,6 +18,9 @@ namespace MangaBaseAPI.Domain.Entities
         public DateTimeOffset? ModifiedDateTime { get; set; }
 
         public ICollection<PasswordHistory> PasswordHistories { get; set; } = default!;
+        public ICollection<Title> UploadedTitles { get; set; } = default!;
+        public ICollection<TitleRating> TitleRatings { get; set; } = default!;
+        public ICollection<Chapter> UploadedChapters { get; set; } = default!;
 
         public User()
         {
