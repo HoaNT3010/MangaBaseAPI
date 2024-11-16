@@ -17,6 +17,7 @@ namespace MangaBaseAPI.Application
 
             services.AddFluentValidationPipeline();
             services.AddLoggingPipelineBehavior();
+            services.ConfigureAutoMapper();
 
             return services;
         }
@@ -37,6 +38,13 @@ namespace MangaBaseAPI.Application
             services.AddScoped(
                 typeof(IPipelineBehavior<,>),
                 typeof(LoggingPipelineBehavior<,>));
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureAutoMapper(this IServiceCollection services) 
+        {
+            services.AddAutoMapper(typeof(ServiceCollectionExtensions).Assembly);
 
             return services;
         }
