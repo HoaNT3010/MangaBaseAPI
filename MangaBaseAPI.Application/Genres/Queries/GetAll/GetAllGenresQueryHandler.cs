@@ -32,16 +32,16 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
             GetAllGenresQuery request,
             CancellationToken cancellationToken)
         {
-            string? cachedValue = await _distributedCache
+            string? cachedData = await _distributedCache
                 .GetStringAsync(GenresKey, cancellationToken);
 
-            if (string.IsNullOrEmpty(cachedValue))
+            if (string.IsNullOrEmpty(cachedData))
             {
                 var genresList = await _mapper
                     .ProjectTo<GenreResponse>(_unitOfWork.GetRepository<IGenreRepository>().GetQueryableSet())
                     .ToListAsync(cancellationToken);
 
-                if (genresList != null && genresList.Count > 0)
+                if (genresList is { Count: > 0 })
                 {
                     string genresListString = JsonConvert.SerializeObject(genresList);
 
@@ -60,8 +60,7 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
                 return Result.SuccessNullError(genresList)!;
             }
 
-            var genres = JsonConvert.DeserializeObject<List<GenreResponse>>(cachedValue!);
-            return Result.SuccessNullError(genres)!;
+            return Result.SuccessNullError(JsonConvert.DeserializeObject<List<GenreResponse>>(cachedData!))!;
         }
     }
 }
