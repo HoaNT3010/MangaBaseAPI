@@ -1,0 +1,63 @@
+﻿using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Entities;
+using MangaBaseAPI.Domain.Repositories;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+
+namespace MangaBaseAPI.Application.Genres.Queries.GetAll
+{
+    public class GetAllGenresQueryHandler
+        : IRequestHandler<GetAllGenresQuery, Result<List<Genre>>>
+    {
+        const string GenresKey = "Genres";
+
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDistributedCache _distributedCache;
+
+        public GetAllGenresQueryHandler(
+            IUnitOfWork unitOfWork,
+            IDistributedCache distributedCache)
+        {
+            _unitOfWork = unitOfWork;
+            _distributedCache = distributedCache;
+        }
+
+        public async Task<Result<List<Genre>>> Handle(
+            GetAllGenresQuery request,
+            CancellationToken cancellationToken)
+        {
+            string? cachedValue = await _distributedCache
+                .GetStringAsync(GenresKey, cancellationToken);
+
+            if (string.IsNullOrEmpty(cachedValue))
+            {
+                var genresList = await _unitOfWork.GetRepository<IGenreRepository>()
+                    .GetQueryableSet()
+                    .ToListAsync(cancellationToken);
+
+                if (genresList != null && genresList.Count > 0)
+                {
+                    string genresListString = JsonConvert.SerializeObject(genresList);
+
+                    var cacheOptions = new DistributedCacheEntryOptions()
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3),
+                        SlidingExpiration = TimeSpan.FromMinutes(30),
+                    };
+
+                    await _distributedCache.SetStringAsync(GenresKey,
+                       genresListString,
+                       cacheOptions,
+                       cancellationToken);
+                }
+
+                return Result.SuccessNullError(genresList)!;
+            }
+
+            var genres = JsonConvert.DeserializeObject<List<Genre>>(cachedValue!);
+            return Result.SuccessNullError(genres)!;
+        }
+    }
+}
