@@ -6,6 +6,7 @@ using MangaBaseAPI.Infrastructure.Jwt;
 using MangaBaseAPI.Infrastructure.Swagger;
 using Serilog;
 using MangaBaseAPI.Infrastructure.Caching.Redis;
+using MangaBaseAPI.Infrastructure.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -34,7 +35,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
         .AddIdentityCore()
         .AddJwtProvider()
         .AddSwagger()
-        .AddRedisCaching(builder.Configuration);
+        .AddRedisCaching(builder.Configuration)
+        .AddStorageServices();
 }
 
 var app = builder.Build();
