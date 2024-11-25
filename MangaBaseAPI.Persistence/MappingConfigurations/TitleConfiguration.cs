@@ -23,6 +23,12 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                 .WithMany(u => u.UploadedTitles)
                 .HasForeignKey(x => x.UploaderId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Property(x => x.RowVersion)
+                .IsRowVersion();
+
+            builder.HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

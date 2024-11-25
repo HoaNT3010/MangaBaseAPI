@@ -11,12 +11,15 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
             builder.ToTable("Genres");
 
             builder.HasKey(x => x.Id);
-
+                
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Name)
                 .HasMaxLength(50);
+
+            builder.HasIndex(x => x.Name)
+                .IsUnique();
         }
     }
 }

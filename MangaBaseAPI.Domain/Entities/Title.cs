@@ -12,6 +12,7 @@ namespace MangaBaseAPI.Domain.Entities
         public bool IsDeleted { get; set; } = false;
         public DateTimeOffset? PublishedDate { get; set; }
         public float AverageRating { get; set; } = 0;
+        public string? CoverImageUrl { get; set; }
 
         // UserId and User
         public Guid? UploaderId { get; set; }

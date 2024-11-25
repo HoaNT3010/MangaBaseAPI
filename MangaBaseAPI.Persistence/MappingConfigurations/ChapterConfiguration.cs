@@ -25,6 +25,9 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                 .WithMany(u => u.UploadedChapters)
                 .HasForeignKey(x => x.UploaderId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Property(x => x.RowVersion)
+                .IsRowVersion();
         }
     }
 }
