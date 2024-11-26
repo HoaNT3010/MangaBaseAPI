@@ -52,6 +52,15 @@ namespace MangaBaseAPI.Persistence
             services.AddScoped<IUserTokenRepository, UserTokenRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<ILanguageCodeRepository, LanguageCodeRepository>();
+            services.AddScoped<IAlternativeNameRepository, AlternativeNameRepository>();
+            services.AddScoped<IChapterImageRepository, ChapterImageRepository>();
+            services.AddScoped<IChapterRepository, ChapterRepository>();
+            services.AddScoped<ICreatorRepository, CreatorRepository>();
+            services.AddScoped<ITitleArtistRepository, TitleArtistRepository>();
+            services.AddScoped<ITitleAuthorRepository, TitleAuthorRepository>();
+            services.AddScoped<ITitleGenreRepository, TitleGenreRepository>();
+            services.AddScoped<ITitleRatingRepository, TitleRatingRepository>();
+            services.AddScoped<ITitleRepository, TitleRepository>();
 
             return services;
         }
