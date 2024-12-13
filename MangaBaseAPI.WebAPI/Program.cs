@@ -43,7 +43,8 @@ var app = builder.Build();
 {
     app.RegisterPipelines()
         .AddSwagger()
-        .UseGlobalErrorHandling();
+        .UseGlobalErrorHandling()
+        .RegisterMiddlewares();
 
     app.Run();
 }

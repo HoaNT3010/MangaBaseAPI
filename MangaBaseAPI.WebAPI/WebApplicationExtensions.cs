@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using Carter;
 using Serilog;
+using MangaBaseAPI.WebAPI.Middlewares;
 
 namespace MangaBaseAPI.WebAPI
 {
@@ -61,6 +62,13 @@ namespace MangaBaseAPI.WebAPI
                 .WithApiVersionSet(apiVersionSet);
 
             versionedGroup.MapCarter();
+
+            return application;
+        }
+
+        public static WebApplication RegisterMiddlewares(this WebApplication application)
+        {
+            application.UseMiddleware<UserClaimsMiddleware>();
 
             return application;
         }
