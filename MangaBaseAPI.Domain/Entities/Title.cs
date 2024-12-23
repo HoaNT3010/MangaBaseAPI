@@ -25,5 +25,32 @@ namespace MangaBaseAPI.Domain.Entities
         public ICollection<Chapter> Chapters { get; set; } = default!;
         public ICollection<TitleAuthor> TitleAuthors { get; set; } = default!;
         public ICollection<TitleArtist> TitleArtists { get; set; } = default!;
+
+        public Title()
+        {
+        }
+
+        public Title(
+            Guid id,
+            string name,
+            string? description,
+            int titleType,
+            int titleStatus,
+            DateTimeOffset? publishedDate,
+            Guid uploaderId)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            Type = (TitleType)titleType;
+            Status = (TitleStatus)titleStatus;
+            PublishedDate = publishedDate;
+            UploaderId = uploaderId;
+
+            // Should newly created title be hidden?
+            IsHidden = false;
+            IsDeleted = false;
+            AverageRating = 0;
+        }
     }
 }

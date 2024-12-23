@@ -13,5 +13,18 @@ namespace MangaBaseAPI.Domain.Entities
 
         public Guid TitleId { get; set; }
         public Title Title { get; set; } = default!;
+
+        public AlternativeName()
+        {
+        }
+
+        public AlternativeName(Guid titleId,
+            string name,
+            string languageCodeId)
+        {
+            Name = name;
+            LanguageCodeId = languageCodeId;
+            TitleId = titleId;
+        }
     }
 }

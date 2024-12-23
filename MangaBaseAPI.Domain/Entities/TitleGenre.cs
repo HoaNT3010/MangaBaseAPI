@@ -7,5 +7,15 @@
 
         public int GenreId { get; set; }
         public Genre Genre { get; set; } = default!;
+
+        public TitleGenre()
+        {
+        }
+
+        public TitleGenre(Guid titleId, int genreId)
+        {
+            TitleId = titleId;
+            GenreId = genreId;
+        }
     }
 }

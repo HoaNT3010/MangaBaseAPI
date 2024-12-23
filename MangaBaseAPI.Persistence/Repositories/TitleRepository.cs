@@ -1,5 +1,6 @@
 ﻿using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace MangaBaseAPI.Persistence.Repositories
 {
@@ -7,6 +8,11 @@ namespace MangaBaseAPI.Persistence.Repositories
     {
         public TitleRepository(MangaBaseDbContext context) : base(context)
         {
+        }
+
+        public async Task<bool> IsTitleNameTaken(string titleName)
+        {
+            return await _dbSet.AnyAsync(x => x.Name == titleName);
         }
     }
 }

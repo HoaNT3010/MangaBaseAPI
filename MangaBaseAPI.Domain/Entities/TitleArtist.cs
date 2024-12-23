@@ -7,5 +7,17 @@
 
         public Guid ArtistId { get; set; }
         public Creator Artist { get; set; } = default!;
+
+        public TitleArtist()
+        {
+        }
+
+        public TitleArtist(
+            Guid titleId,
+            Guid creatorId)
+        {
+            TitleId = titleId;
+            ArtistId = creatorId;
+        }
     }
 }
