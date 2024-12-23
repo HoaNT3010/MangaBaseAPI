@@ -10,5 +10,26 @@ namespace MangaBaseAPI.Domain.Entities
 
         public ICollection<TitleAuthor> TitleAuthors { get; set; } = default!;
         public ICollection<TitleArtist> TitleArtists { get; set; } = default!;
+
+        public Creator()
+        {
+        }
+
+        public Creator(string name,
+            string? biography)
+        {
+            Name = name;
+            Biography = biography;
+            Id = Guid.NewGuid();
+        }
+
+        public Creator(Guid id,
+            string name,
+            string? biography)
+        {
+            Id = id;
+            Name = name;
+            Biography = biography;
+        }
     }
 }
