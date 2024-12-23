@@ -1,8 +1,8 @@
 ﻿using Asp.Versioning;
 using Carter;
 using MangaBaseAPI.WebAPI.Common;
+using MangaBaseAPI.WebAPI.Middlewares;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 
 namespace MangaBaseAPI.WebAPI
@@ -31,6 +31,8 @@ namespace MangaBaseAPI.WebAPI
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
+            services.AddCustomMiddlewares();
 
             return services;
         }
@@ -62,6 +64,13 @@ namespace MangaBaseAPI.WebAPI
                 options.GroupNameFormat = "'v'V";
                 options.SubstituteApiVersionInUrl = true;
             });
+
+            return services;
+        }
+
+        private static IServiceCollection AddCustomMiddlewares(this IServiceCollection services)
+        {
+            services.AddTransient<UserClaimsMiddleware>();
 
             return services;
         }
