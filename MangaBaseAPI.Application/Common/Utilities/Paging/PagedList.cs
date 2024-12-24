@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MangaBaseAPI.Application.Common.Utilities
+namespace MangaBaseAPI.Application.Common.Utilities.Paging
 {
     public class PagedList<T> where T : class
     {
