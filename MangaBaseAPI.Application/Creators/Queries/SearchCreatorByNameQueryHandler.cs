@@ -26,7 +26,12 @@ namespace MangaBaseAPI.Application.Creators.Queries
             CancellationToken cancellationToken)
         {
             var creatorRepository = _unitOfWork.GetRepository<ICreatorRepository>();
-            var query = creatorRepository.ApplySpecification(new SearchCreatorByNameSpecification(request.Keyword));
+            var query = creatorRepository.ApplySpecification(new SearchCreatorByNameSpecification(request.Keyword))
+                .Select(x => new Creator
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                });
             var creators = await PagedList<Creator>.CreateAsync(query, request.Page, request.PageSize);
 
             return Result.SuccessNullError(_mapper.Map<PagedList<SearchCreatorByNameResponse>>(creators));
