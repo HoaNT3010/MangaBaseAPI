@@ -47,6 +47,11 @@ namespace MangaBaseAPI.Domain.Entities
             PublishedDate = publishedDate;
             UploaderId = uploaderId;
 
+            TitleGenres = new List<TitleGenre>();
+            AlternativeNames = new List<AlternativeName>();
+            TitleAuthors = new List<TitleAuthor>();
+            TitleArtists = new List<TitleArtist>();
+
             // Should newly created title be hidden?
             IsHidden = false;
             IsDeleted = false;
