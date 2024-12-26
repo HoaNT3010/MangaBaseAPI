@@ -6,7 +6,7 @@ using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
 
-namespace MangaBaseAPI.Application.Creators.Queries
+namespace MangaBaseAPI.Application.Creators.Queries.SearchByName
 {
     public class SearchCreatorByNameQueryHandler : IRequestHandler<SearchCreatorByNameQuery, Result<PagedList<SearchCreatorByNameResponse>>>
     {

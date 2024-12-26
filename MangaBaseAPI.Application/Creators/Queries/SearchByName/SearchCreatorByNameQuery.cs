@@ -3,7 +3,7 @@ using MangaBaseAPI.Contracts.Creators.Search;
 using MangaBaseAPI.Domain.Abstractions;
 using MediatR;
 
-namespace MangaBaseAPI.Application.Creators.Queries
+namespace MangaBaseAPI.Application.Creators.Queries.SearchByName
 {
     public record SearchCreatorByNameQuery(
         string Keyword,

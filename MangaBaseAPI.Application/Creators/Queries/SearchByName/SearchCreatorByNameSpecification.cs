@@ -1,7 +1,7 @@
 ﻿using MangaBaseAPI.Domain.Abstractions.Specification;
 using MangaBaseAPI.Domain.Entities;
 
-namespace MangaBaseAPI.Application.Creators.Queries
+namespace MangaBaseAPI.Application.Creators.Queries.SearchByName
 {
     public class SearchCreatorByNameSpecification : Specification<Creator>
     {

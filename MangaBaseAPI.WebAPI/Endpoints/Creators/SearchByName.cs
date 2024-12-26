@@ -1,5 +1,5 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Creators.Queries;
+using MangaBaseAPI.Application.Creators.Queries.SearchByName;
 using MangaBaseAPI.Contracts.Creators.Search;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace MangaBaseAPI.Application.Creators.Queries
+namespace MangaBaseAPI.Application.Creators.Queries.SearchByName
 {
     public class SearchCreatorByNameQueryValidator : AbstractValidator<SearchCreatorByNameQuery>
     {
