@@ -13,8 +13,12 @@ namespace MangaBaseAPI.Domain.Errors.Title
         public static readonly Error InvalidArtist = Error.Validation("Title.Create.InvalidArtist", "Title contains one or many invalid artist(s): ");
         #endregion
 
-        #region GetById
-        public static readonly Error TitleNotFound = Error.NotFound("Title.GetById.TitleNotFound", "No title found with the given ID");
+        #region Update
+        public static readonly Error UpdateTitleCoverFailed = Error.Failure("Title.Update.UpdateTitleCoverFailed", "Unexpected error(s) occurred when trying to update title's cover image");
+        #endregion
+
+        #region General
+        public static readonly Error TitleNotFound = Error.NotFound("Title.General.TitleNotFound", "No title found with the given ID");
         #endregion
     }
 }
