@@ -7,8 +7,8 @@ namespace MangaBaseAPI.Application.Common.Utilities.Storage
         static readonly string[] AllowedImageExtensions = { ".png", ".jpg", ".jpeg", ".webp" };
         static readonly string[] AllowedMimeTypes = { "image/png", "image/jpeg", "image/webp" };
 
-        // 5MB
-        const long MaxFileSize = 5 * 1024 * 1024;
+        // 10MB
+        public const long MaxFileSize = 10 * 1024 * 1024;
 
         public static bool IsImageExtensionValid(string fileName)
         {

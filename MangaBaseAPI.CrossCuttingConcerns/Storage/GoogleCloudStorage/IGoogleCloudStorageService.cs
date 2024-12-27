@@ -11,5 +11,7 @@ namespace MangaBaseAPI.CrossCuttingConcerns.Storage.GoogleCloudStorage
 
         Task UploadFileAsync(IFormFile file);
         Task UploadMultipleFilesAsync(IEnumerable<IFormFile> files);
+        Task UploadFileAsync(IFormFile file, string destinationFileName);
+        string GetBucketName();
     }
 }

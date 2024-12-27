@@ -3,6 +3,7 @@
     public static class FilePathGenerator
     {
         const string TitleFolderName = "titles";
+        const string GoogleCloudStorageUrl = "https://storage.googleapis.com";
 
         public static string GenerateCoverImagePath(string titleId, string fileName)
         {
@@ -25,9 +26,9 @@
             return $"{TitleFolderName}/{titleId}/{chapterIndex}/";
         }
 
-        public static string GenerateFileUrl(string bucketUrl, string filePath)
+        public static string GenerateFullFileUrl(string bucketName, string filePath)
         {
-            return $"{bucketUrl}/{filePath}";
+            return $"{GoogleCloudStorageUrl}/{bucketName}/{filePath}";
         }
     }
 }

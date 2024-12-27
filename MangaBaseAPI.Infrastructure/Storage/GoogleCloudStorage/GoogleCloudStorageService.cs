@@ -35,14 +35,15 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
 
         public async Task DeleteMultipleFilesAsync(List<string> fileNames)
         {
-            if (fileNames.Count == 0) {
+            if (fileNames.Count == 0)
+            {
                 _logger.LogInformation("{@ServiceName} - {@MethodName}: Empty files list, cancelled files deleting operation",
                 typeof(GoogleCloudStorageService).Name,
                 nameof(DeleteFileAsync));
 
                 return;
             }
-            
+
             foreach (var fileName in fileNames)
             {
                 await DeleteFileAsync(fileName);
@@ -71,7 +72,7 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
 
         public async Task UploadFileAsync(IFormFile file)
         {
-            if(file is null  || file.Length == 0)
+            if (file is null || file.Length == 0)
             {
                 throw new ArgumentException("File is empty or null.");
             }
@@ -92,7 +93,7 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
 
         public async Task UploadMultipleFilesAsync(Dictionary<string, string> files)
         {
-            if(files.Count == 0)
+            if (files.Count == 0)
             {
                 return;
             }
@@ -124,6 +125,30 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
                 typeof(GoogleCloudStorageService).Name,
                 nameof(DeleteFileAsync),
                 files.Count());
+        }
+
+        public async Task UploadFileAsync(IFormFile file, string destinationFileName)
+        {
+            if (file is null || file.Length == 0)
+            {
+                throw new ArgumentException("File is empty or null.");
+            }
+
+            using var stream = file.OpenReadStream();
+            await _storageClient.UploadObjectAsync(_storageOptions.BucketName,
+                destinationFileName,
+                file.ContentType,
+                stream);
+
+            _logger.LogInformation("{@ServiceName} - {@MethodName}: Successfully uploaded file {@FileName} to cloud storage",
+                typeof(GoogleCloudStorageService).Name,
+                nameof(UploadFileAsync),
+                destinationFileName);
+        }
+
+        public string GetBucketName()
+        {
+            return _storageOptions.BucketName;
         }
     }
 }
