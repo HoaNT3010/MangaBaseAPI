@@ -24,7 +24,7 @@ namespace MangaBaseAPI.Application.Creators.Commands.Create
             // Check if creator with same name already exists
             if (await creatorRepository.IsCreatorNameExist(request.Name))
             {
-                return Result.Failure(CreatorErrors.ExistedCreatorName);
+                return Result.Failure(CreatorErrors.Create_ExistedCreatorName);
             }
 
             Creator newCreator = new Creator(request.Name, request.Biography);
@@ -33,7 +33,7 @@ namespace MangaBaseAPI.Application.Creators.Commands.Create
 
             if (result <= 0)
             {
-                return Result.Failure(CreatorErrors.CreateCreatorFailed);
+                return Result.Failure(CreatorErrors.Create_CreateCreatorFailed);
             }
 
             return Result.SuccessNullError();

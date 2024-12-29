@@ -51,7 +51,7 @@ namespace MangaBaseAPI.Application.Tittles.Queries.GetById
 
                 if (title == null)
                 {
-                    return Result.Failure<GetTitleByIdResponse>(TitleErrors.TitleNotFound);
+                    return Result.Failure<GetTitleByIdResponse>(TitleErrors.General_TitleNotFound);
                 }
 
                 var result = _mapper.Map<GetTitleByIdResponse>(title);

@@ -35,7 +35,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateGenres
 
             if (title == null)
             {
-                return Result.Failure(TitleErrors.TitleNotFound);
+                return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
             (bool validateResult, int genreIndex) = await IsNewGenresValid(request.Genres, _unitOfWork, _distributedCache);

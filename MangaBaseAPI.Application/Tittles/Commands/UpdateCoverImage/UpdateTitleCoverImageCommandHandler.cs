@@ -38,7 +38,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateCoverImage
 
             if (title == null)
             {
-                return Result.Failure(TitleErrors.TitleNotFound);
+                return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
             // Change file path
@@ -58,7 +58,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateCoverImage
             catch (Exception ex)
             {
                 _logger.LogError("Failed to delete old cover image from cloud storage: {Message}", ex.Message);
-                return Result.Failure(CloudStorageErrors.RemoveFileFailed);
+                return Result.Failure(CloudStorageErrors.Google_RemoveFileFailed);
             }
 
             try
@@ -69,7 +69,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateCoverImage
             catch (Exception ex)
             {
                 _logger.LogError("Failed to upload new cover image to cloud storage: {Message}", ex.Message);
-                return Result.Failure(CloudStorageErrors.UploadFileFailed);
+                return Result.Failure(CloudStorageErrors.Google_UploadFileFailed);
             }
 
             try
@@ -84,7 +84,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateCoverImage
             catch (Exception ex)
             {
                 _logger.LogError("Failed to save title's new cover image url: {Message}", ex.Message);
-                return Result.Failure(TitleErrors.UpdateTitleCoverFailed);
+                return Result.Failure(TitleErrors.Update_UpdateTitleCoverFailed);
             }
 
             return Result.SuccessNullError();

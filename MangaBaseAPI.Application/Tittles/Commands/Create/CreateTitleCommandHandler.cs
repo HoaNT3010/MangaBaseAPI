@@ -25,7 +25,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.Create
             var titleRepo = _unitOfWork.GetRepository<ITitleRepository>();
             if (await titleRepo.IsTitleNameTaken(request.Name))
             {
-                return Result.Failure(TitleErrors.ExistedTitleName);
+                return Result.Failure(TitleErrors.Create_ExistedTitleName);
             }
 
             // Validate title's properties (alt names, genres, authors, artists)
@@ -33,16 +33,16 @@ namespace MangaBaseAPI.Application.Tittles.Commands.Create
             if (!altNameValidationResult)
             {
                 return Result.Failure(
-                    Error.Validation(TitleErrors.InvalidAltNameLanguage.Code,
-                    TitleErrors.InvalidAltNameLanguage.Description + $"Position '{altNameIndex + 1}' - Name '{request.AlternativeNames![altNameIndex].Name}' - Language code '{request.AlternativeNames![altNameIndex].LanguageCodeId}'"));
+                    Error.Validation(TitleErrors.Create_InvalidAltNameLanguage.Code,
+                    TitleErrors.Create_InvalidAltNameLanguage.Description + $"Position '{altNameIndex + 1}' - Name '{request.AlternativeNames![altNameIndex].Name}' - Language code '{request.AlternativeNames![altNameIndex].LanguageCodeId}'"));
             }
 
             (bool genreValidationResult, int genreIndex) = ValidateGenres(request.Genres, _unitOfWork);
             if (!genreValidationResult)
             {
                 return Result.Failure(
-                    Error.Validation(TitleErrors.InvalidGenre.Code,
-                    TitleErrors.InvalidGenre.Description + $"Genre at position '{genreIndex + 1}'"));
+                    Error.Validation(TitleErrors.Create_InvalidGenre.Code,
+                    TitleErrors.Create_InvalidGenre.Description + $"Genre at position '{genreIndex + 1}'"));
             }
 
             var creatorIds = _unitOfWork.GetRepository<ICreatorRepository>()
@@ -54,16 +54,16 @@ namespace MangaBaseAPI.Application.Tittles.Commands.Create
             if (!authorValidationResult)
             {
                 return Result.Failure(
-                    Error.Validation(TitleErrors.InvalidAuthor.Code,
-                    TitleErrors.InvalidAuthor.Description + $"Author at position '{authorIndex + 1}' - Id '{request.Authors![authorIndex]}'"));
+                    Error.Validation(TitleErrors.Create_InvalidAuthor.Code,
+                    TitleErrors.Create_InvalidAuthor.Description + $"Author at position '{authorIndex + 1}' - Id '{request.Authors![authorIndex]}'"));
             }
 
             (bool artistValidationResult, int artistIndex) = ValidateTitleCreators(request.Artists, creatorIds);
             if (!artistValidationResult)
             {
                 return Result.Failure(
-                    Error.Validation(TitleErrors.InvalidArtist.Code,
-                    TitleErrors.InvalidArtist.Description + $"Artist at position '{authorIndex + 1}' - Id '{request.Artists![authorIndex]}'"));
+                    Error.Validation(TitleErrors.Create_InvalidArtist.Code,
+                    TitleErrors.Create_InvalidArtist.Description + $"Artist at position '{authorIndex + 1}' - Id '{request.Artists![authorIndex]}'"));
             }
 
             // Create new title entity
@@ -87,7 +87,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.Create
             var result = await _unitOfWork.SaveChangeAsync();
             if (result == 0)
             {
-                return Result.Failure(TitleErrors.CreateTitleFailed);
+                return Result.Failure(TitleErrors.Create_CreateTitleFailed);
             }
 
             return Result.SuccessNullError();
