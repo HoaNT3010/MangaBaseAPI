@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MangaBaseAPI.Contracts.Titles.GetById;
 using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Caching;
 using MangaBaseAPI.Domain.Errors.Title;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
@@ -12,8 +13,6 @@ namespace MangaBaseAPI.Application.Tittles.Queries.GetById
 {
     public class GetTitleByIdQueryHandler : IRequestHandler<GetTitleByIdQuery, Result<GetTitleByIdResponse>>
     {
-        const string GetByIdKey = "title_";
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDistributedCache _distributedCache;
@@ -33,7 +32,7 @@ namespace MangaBaseAPI.Application.Tittles.Queries.GetById
             CancellationToken cancellationToken)
         {
             var cachedData = await _distributedCache
-                .GetStringAsync(GetByIdKey + request.Id.ToString(), cancellationToken);
+                .GetStringAsync(TitleCachingConstants.GetByIdKey + request.Id.ToString(), cancellationToken);
 
             if (string.IsNullOrEmpty(cachedData))
             {
@@ -64,7 +63,7 @@ namespace MangaBaseAPI.Application.Tittles.Queries.GetById
                     SlidingExpiration = TimeSpan.FromHours(1),
                 };
 
-                await _distributedCache.SetStringAsync(GetByIdKey + request.Id.ToString(),
+                await _distributedCache.SetStringAsync(TitleCachingConstants.GetByIdKey + request.Id.ToString(),
                     resultJsonString,
                     cacheOptions,
                     cancellationToken);

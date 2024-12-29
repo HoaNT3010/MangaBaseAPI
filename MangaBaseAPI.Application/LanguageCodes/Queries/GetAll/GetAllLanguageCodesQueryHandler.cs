@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MangaBaseAPI.Contracts.LanguageCodes.GetAll;
 using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Caching;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,6 @@ namespace MangaBaseAPI.Application.LanguageCodes.Queries.GetAll
             GetAllLanguageCodesQuery,
             Result<List<LanguageCodeResponse>>>
     {
-        const string LanguageCodesKey = "LanguageCodes";
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _distributedCache;
         private readonly IMapper _mapper;
@@ -35,7 +34,7 @@ namespace MangaBaseAPI.Application.LanguageCodes.Queries.GetAll
             CancellationToken cancellationToken)
         {
             var cachedData = await _distributedCache.GetStringAsync(
-                LanguageCodesKey,
+                LanguageCodeCachingConstants.GetAllKey,
                 cancellationToken);
 
             if (string.IsNullOrEmpty(cachedData))
@@ -44,12 +43,12 @@ namespace MangaBaseAPI.Application.LanguageCodes.Queries.GetAll
                     .ProjectTo<LanguageCodeResponse>(_unitOfWork.GetRepository<ILanguageCodeRepository>().GetQueryableSet())
                     .ToListAsync(cancellationToken);
 
-                if (languagesList is { Count: > 0})
+                if (languagesList is { Count: > 0 })
                 {
                     string languagesListString = JsonConvert.SerializeObject(languagesList);
 
                     await _distributedCache.SetStringAsync(
-                        LanguageCodesKey,
+                        LanguageCodeCachingConstants.GetAllKey,
                         languagesListString,
                         cancellationToken);
                 }

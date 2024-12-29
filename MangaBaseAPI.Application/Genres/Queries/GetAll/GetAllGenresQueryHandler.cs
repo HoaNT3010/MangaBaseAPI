@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MangaBaseAPI.Contracts.Genres.GetAll;
 using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Caching;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,6 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
     public class GetAllGenresQueryHandler
         : IRequestHandler<GetAllGenresQuery, Result<List<GenreResponse>>>
     {
-        const string GenresKey = "Genres";
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDistributedCache _distributedCache;
         private readonly IMapper _mapper;
@@ -33,7 +32,7 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
             CancellationToken cancellationToken)
         {
             string? cachedData = await _distributedCache
-                .GetStringAsync(GenresKey, cancellationToken);
+                .GetStringAsync(GenreCachingConstants.GetAllKey, cancellationToken);
 
             if (string.IsNullOrEmpty(cachedData))
             {
@@ -51,7 +50,7 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
                         SlidingExpiration = TimeSpan.FromMinutes(30),
                     };
 
-                    await _distributedCache.SetStringAsync(GenresKey,
+                    await _distributedCache.SetStringAsync(GenreCachingConstants.GetAllKey,
                        genresListString,
                        cacheOptions,
                        cancellationToken);
