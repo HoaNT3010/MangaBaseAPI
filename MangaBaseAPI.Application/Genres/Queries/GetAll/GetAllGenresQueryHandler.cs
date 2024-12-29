@@ -46,8 +46,8 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
 
                     var cacheOptions = new DistributedCacheEntryOptions()
                     {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3),
-                        SlidingExpiration = TimeSpan.FromMinutes(30),
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1),
+                        SlidingExpiration = TimeSpan.FromHours(1),
                     };
 
                     await _distributedCache.SetStringAsync(GenreCachingConstants.GetAllKey,
