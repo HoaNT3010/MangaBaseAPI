@@ -15,6 +15,8 @@ namespace MangaBaseAPI.Domain.Errors.Title
 
         #region Update
         public static readonly Error UpdateTitleCoverFailed = Error.Failure("Title.Update.UpdateTitleCoverFailed", "Unexpected error(s) occurred when trying to update title's cover image");
+        public static readonly Error Update_InvalidGenre = Error.Validation("Title.Update.InvalidGenres", "Title's genres contains one or many invalid genre(s): ");
+        public static readonly Error Update_UpdateGenreFailed = Error.Failure("Title.Update.UpdateGenreFailed", "Unexpected error(s) occurred when trying to update title's genres");
         #endregion
 
         #region General
