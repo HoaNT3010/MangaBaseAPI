@@ -3,10 +3,10 @@ using MangaBaseAPI.Domain.Entities;
 
 namespace MangaBaseAPI.Application.Tittles.Commands.UpdateAuthors
 {
-    internal class UpdateTitleAuthorsCommandSpecification
+    internal class UpdateTitleAuthorsSpecification
         : Specification<Title>
     {
-        public UpdateTitleAuthorsCommandSpecification(
+        public UpdateTitleAuthorsSpecification(
             Guid id) : base(x => x.Id == id)
         {
             AddInclude(x => x.TitleAuthors);

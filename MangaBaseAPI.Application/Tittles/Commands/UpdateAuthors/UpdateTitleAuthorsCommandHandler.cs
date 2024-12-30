@@ -24,7 +24,7 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateAuthors
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             var title = await titleRepository.FirstOrDefaultAsync(
-                titleRepository.ApplySpecification(new UpdateTitleAuthorsCommandSpecification(request.Id)));
+                titleRepository.ApplySpecification(new UpdateTitleAuthorsSpecification(request.Id)));
 
             if (title == null)
             {
