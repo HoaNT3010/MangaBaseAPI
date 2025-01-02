@@ -38,12 +38,12 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateGenres
                 return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
-            (bool validateResult, int genreIndex) = await IsNewGenresValid(request.Genres, _unitOfWork, _distributedCache);
-            if (!validateResult)
+            var invalidGenres = await FindInvalidNewGenres(request.Genres);
+            if (invalidGenres.Any())
             {
                 return Result.Failure(
                     Error.Validation(TitleErrors.Update_InvalidGenre.Code,
-                    TitleErrors.Update_InvalidGenre.Description + $"Genre with ID '{request.Genres[genreIndex]}'"));
+                    TitleErrors.Update_InvalidGenre.Description + string.Join(" ", invalidGenres)));
             }
 
             title.TitleGenres.Clear();
@@ -63,40 +63,31 @@ namespace MangaBaseAPI.Application.Tittles.Commands.UpdateGenres
             return Result.SuccessNullError();
         }
 
-        private async Task<(bool, int)> IsNewGenresValid(List<int> newGenres,
-            IUnitOfWork unitOfWork,
-            IDistributedCache distributedCache)
+        private async Task<List<int>> FindInvalidNewGenres(List<int> newGenres)
         {
             if (newGenres.Count == 0)
             {
-                return (true, -1);
+                return newGenres;
             }
 
             var cachedGenresData = await _distributedCache.GetStringAsync(GenreCachingConstants.GetAllKey);
             if (!string.IsNullOrEmpty(cachedGenresData))
             {
-                var cachedGenres = JsonConvert.DeserializeObject<List<GenreResponse>>(cachedGenresData);
-                for (int i = 0; i < newGenres.Count; i++)
-                {
-                    if (!cachedGenres!.Any(x => x.Id == newGenres[i]))
-                    {
-                        return (false, i);
-                    }
-                }
+                var cachedExistingGenres = JsonConvert.DeserializeObject<List<GenreResponse>>(cachedGenresData)!
+                    .Select(x => x.Id)
+                    .Where(x => newGenres.Contains(x))
+                    .ToList();
+
+                return newGenres.Except(cachedExistingGenres).ToList();
             }
 
-            var genres = await _unitOfWork.GetRepository<IGenreRepository>()
-                .GetQueryableSet()
+            var genresRepository = _unitOfWork.GetRepository<IGenreRepository>();
+            var existingGenres = await genresRepository.GetQueryableSet()
+                .Select(x => x.Id)
+                .Where(x => newGenres.Contains(x))
                 .ToListAsync();
-            for (int i = 0; i < newGenres.Count; i++)
-            {
-                if (!genres.Any(x => x.Id == newGenres[i]))
-                {
-                    return (false, i);
-                }
-            }
 
-            return (true, -1);
+            return newGenres.Except(existingGenres).ToList();
         }
     }
 }
