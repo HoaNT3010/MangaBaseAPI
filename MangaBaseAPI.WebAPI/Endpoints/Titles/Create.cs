@@ -1,6 +1,7 @@
 ﻿using Carter;
 using MangaBaseAPI.Application.Titles.Commands.Create;
 using MangaBaseAPI.Contracts.Titles.Create;
+using MangaBaseAPI.Domain.Constants.Authorization;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;
 using TitleAlternativeName = MangaBaseAPI.Application.Titles.Commands.Create.TitleAlternativeName;
@@ -19,7 +20,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Titles
                     Description = "Create a new title with provided data"
                 })
                 .MapToApiVersion(1)
-                .RequireAuthorization();
+                .RequireAuthorization(Policies.AdminRole);
         }
 
         private static async Task<IResult> HandleCreateTitle(
