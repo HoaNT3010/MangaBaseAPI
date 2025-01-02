@@ -24,7 +24,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Titles
 
         private static async Task<IResult> HandleUpdateCoverImage(
             Guid id,
-            IFormFile coverImage,
+            IFormFile? coverImage,
             ISender sender,
             CancellationToken cancellationToken)
         {
