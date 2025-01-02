@@ -1,6 +1,6 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Tittles.Commands.Create;
-using MangaBaseAPI.Application.Tittles.Commands.UpdateAlternativeNames;
+using MangaBaseAPI.Application.Titles.Commands.Create;
+using MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames;
 using MangaBaseAPI.Contracts.Titles.UpdateAlternativeNames;
 using MangaBaseAPI.Domain.Constants.Authorization;
 using MangaBaseAPI.WebAPI.Common;

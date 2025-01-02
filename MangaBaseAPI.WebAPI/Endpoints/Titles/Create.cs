@@ -1,9 +1,9 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Tittles.Commands.Create;
+using MangaBaseAPI.Application.Titles.Commands.Create;
 using MangaBaseAPI.Contracts.Titles.Create;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;
-using TitleAlternativeName = MangaBaseAPI.Application.Tittles.Commands.Create.TitleAlternativeName;
+using TitleAlternativeName = MangaBaseAPI.Application.Titles.Commands.Create.TitleAlternativeName;
 
 namespace MangaBaseAPI.WebAPI.Endpoints.Titles
 {

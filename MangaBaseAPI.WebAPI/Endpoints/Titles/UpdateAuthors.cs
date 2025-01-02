@@ -1,5 +1,5 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Tittles.Commands.UpdateAuthors;
+using MangaBaseAPI.Application.Titles.Commands.UpdateAuthors;
 using MangaBaseAPI.Contracts.Titles.UpdateAuthors;
 using MangaBaseAPI.Domain.Constants.Authorization;
 using MangaBaseAPI.WebAPI.Common;

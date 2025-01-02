@@ -1,6 +1,6 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Tittles.Commands.Create;
-using MangaBaseAPI.Application.Tittles.Queries.GetById;
+using MangaBaseAPI.Application.Titles.Commands.Create;
+using MangaBaseAPI.Application.Titles.Queries.GetById;
 using MangaBaseAPI.Contracts.Titles.Create;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;

@@ -1,5 +1,5 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Tittles.Commands.UpdateCoverImage;
+using MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage;
 using MangaBaseAPI.Domain.Constants.Authorization;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;
