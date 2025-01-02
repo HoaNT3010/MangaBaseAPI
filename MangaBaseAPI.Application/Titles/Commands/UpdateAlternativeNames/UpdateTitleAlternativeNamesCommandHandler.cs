@@ -44,7 +44,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
             {
                 return Result.Failure(Error.Validation(
                     TitleErrors.Update_InvalidAltName.Code,
-                    TitleErrors.Update_InvalidAltName.Description + string.Join(", ", invalidAlternativeNames)));
+                    TitleErrors.Update_InvalidAltName.Description,
+                    invalidAlternativeNames));
             }
 
             title.AlternativeNames.Clear();

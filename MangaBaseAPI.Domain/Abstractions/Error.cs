@@ -12,6 +12,15 @@
             Code = code;
             Description = description;
             Type = errorType;
+            Value = null;
+        }
+
+        private Error(string code, string description, ErrorType errorType, object value)
+        {
+            Code = code;
+            Description = description;
+            Type = errorType;
+            Value = value;
         }
 
         public string Code { get; }
@@ -34,6 +43,23 @@
 
         public static Error Unauthorized(string code, string description) =>
             new(code, description, ErrorType.Unauthorized);
+
+        public object? Value { get; }
+
+        public static Error NotFound(string code, string description, object value) =>
+            new(code, description, ErrorType.NotFound, value);
+
+        public static Error Validation(string code, string description, object value) =>
+            new(code, description, ErrorType.Validation, value);
+
+        public static Error Conflict(string code, string description, object value) =>
+            new(code, description, ErrorType.Conflict, value);
+
+        public static Error Failure(string code, string description, object value) =>
+            new(code, description, ErrorType.Failure, value);
+
+        public static Error Unauthorized(string code, string description, object value) =>
+            new(code, description, ErrorType.Unauthorized, value);
     }
 
     public enum ErrorType

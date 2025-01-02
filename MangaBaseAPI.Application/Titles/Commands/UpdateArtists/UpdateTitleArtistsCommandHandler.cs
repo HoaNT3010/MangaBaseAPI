@@ -36,7 +36,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
             {
                 return Result.Failure(Error.Validation(
                     TitleErrors.Update_InvalidArtist.Code,
-                    TitleErrors.Update_InvalidArtist.Description + string.Join(", ", invalidArtists)));
+                    TitleErrors.Update_InvalidArtist.Description,
+                    invalidArtists));
             }
 
             title.TitleArtists.Clear();

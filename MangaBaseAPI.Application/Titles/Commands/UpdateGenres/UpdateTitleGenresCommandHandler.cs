@@ -43,7 +43,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
             {
                 return Result.Failure(
                     Error.Validation(TitleErrors.Update_InvalidGenre.Code,
-                    TitleErrors.Update_InvalidGenre.Description + string.Join(" ", invalidGenres)));
+                    TitleErrors.Update_InvalidGenre.Description,
+                    invalidGenres));
             }
 
             title.TitleGenres.Clear();
