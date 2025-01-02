@@ -1,8 +1,13 @@
-﻿using MangaBaseAPI.Domain.Abstractions;
+﻿using MangaBaseAPI.Contracts.LanguageCodes.GetAll;
+using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Caching;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Title;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace MangaBaseAPI.Application.Titles.Commands.Create
 {
@@ -10,11 +15,14 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
         : IRequestHandler<CreateTitleCommand, Result>
     {
         readonly IUnitOfWork _unitOfWork;
+        readonly IDistributedCache _distributedCache;
 
         public CreateTitleCommandHandler(
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IDistributedCache distributedCache)
         {
             _unitOfWork = unitOfWork;
+            _distributedCache = distributedCache;
         }
 
         public async Task<Result> Handle(
@@ -28,42 +36,46 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
                 return Result.Failure(TitleErrors.Create_ExistedTitleName);
             }
 
-            // Validate title's properties (alt names, genres, authors, artists)
-            (bool altNameValidationResult, int altNameIndex) = ValidateAlternativeNames(request, _unitOfWork);
-            if (!altNameValidationResult)
+            var invalidAltNames = await FindInvalidAlternativeNames(request.AlternativeNames);
+            if (invalidAltNames.Any())
             {
                 return Result.Failure(
                     Error.Validation(TitleErrors.Create_InvalidAltNameLanguage.Code,
-                    TitleErrors.Create_InvalidAltNameLanguage.Description + $"Position '{altNameIndex + 1}' - Name '{request.AlternativeNames![altNameIndex].Name}' - Language code '{request.AlternativeNames![altNameIndex].LanguageCodeId}'"));
+                    TitleErrors.Create_InvalidAltNameLanguage.Description,
+                    invalidAltNames));
             }
 
-            (bool genreValidationResult, int genreIndex) = ValidateGenres(request.Genres, _unitOfWork);
-            if (!genreValidationResult)
+            var invalidGenres = await FindInvalidGenres(request.Genres);
+            if (invalidGenres.Any())
             {
                 return Result.Failure(
                     Error.Validation(TitleErrors.Create_InvalidGenre.Code,
-                    TitleErrors.Create_InvalidGenre.Description + $"Genre at position '{genreIndex + 1}'"));
+                    TitleErrors.Create_InvalidGenre.Description,
+                    invalidGenres));
             }
 
-            var creatorIds = _unitOfWork.GetRepository<ICreatorRepository>()
+            var existingTitleCreatorsIds = _unitOfWork.GetRepository<ICreatorRepository>()
                 .GetQueryableSet()
                 .Select(x => x.Id)
+                .Where(x => (request.Authors != null && request.Authors.Contains(x)) || (request.Artists != null && request.Artists.Contains(x)))
                 .ToHashSet();
 
-            (bool authorValidationResult, int authorIndex) = ValidateTitleCreators(request.Authors, creatorIds);
-            if (!authorValidationResult)
+            var invalidAuthors = FindInvalidCreators(request.Authors, existingTitleCreatorsIds);
+            if (invalidAuthors.Any())
             {
                 return Result.Failure(
                     Error.Validation(TitleErrors.Create_InvalidAuthor.Code,
-                    TitleErrors.Create_InvalidAuthor.Description + $"Author at position '{authorIndex + 1}' - Id '{request.Authors![authorIndex]}'"));
+                    TitleErrors.Create_InvalidAuthor.Description,
+                    invalidAuthors));
             }
 
-            (bool artistValidationResult, int artistIndex) = ValidateTitleCreators(request.Artists, creatorIds);
-            if (!artistValidationResult)
+            var invalidArtists = FindInvalidCreators(request.Artists, existingTitleCreatorsIds);
+            if (invalidArtists.Any())
             {
                 return Result.Failure(
                     Error.Validation(TitleErrors.Create_InvalidArtist.Code,
-                    TitleErrors.Create_InvalidArtist.Description + $"Artist at position '{authorIndex + 1}' - Id '{request.Artists![authorIndex]}'"));
+                    TitleErrors.Create_InvalidArtist.Description,
+                    invalidArtists));
             }
 
             // Create new title entity
@@ -75,12 +87,10 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
                 request.TitleStatus,
                 request.PublishedDate,
                 request.UploaderId);
-
-            // Generate title's alternative names, genres, authors, and artists
-            PopulateTitleGenres(request, newTitle);
-            PopulateAlternativeNames(request, newTitle);
-            PopulateTitleAuthors(request, newTitle);
-            PopulateTitleArtists(request, newTitle);
+            newTitle.TitleGenres = GenerateTitleGenres(request.Genres, newTitleId);
+            newTitle.AlternativeNames = GenerateAlternativeNames(request.AlternativeNames, newTitleId);
+            newTitle.TitleAuthors = GenerateTitleAuthors(request.Authors, newTitleId);
+            newTitle.TitleArtists = GenerateTitleArtists(request.Artists, newTitleId);
 
             // Save title to database
             await titleRepo.AddAsync(newTitle, cancellationToken);
@@ -93,137 +103,128 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             return Result.SuccessNullError();
         }
 
-        private void PopulateTitleGenres(CreateTitleCommand command, Title title)
+        private List<TitleGenre> GenerateTitleGenres(List<int>? newGenresId, Guid titleId)
         {
-            if (command.Genres == null || command.Genres.Count == 0)
+            var result = new List<TitleGenre>();
+            if (newGenresId == null || newGenresId.Count == 0)
             {
-                return;
+                return result;
             }
 
-            foreach (var genre in command.Genres)
+            foreach (var genreId in newGenresId)
             {
-                TitleGenre newTitleGenre = new TitleGenre(
-                    title.Id,
-                    genre);
-
-                title.TitleGenres.Add(newTitleGenre);
+                result.Add(new TitleGenre(titleId, genreId));
             }
+            return result;
         }
 
-        private void PopulateAlternativeNames(CreateTitleCommand command, Title title)
+        private List<AlternativeName> GenerateAlternativeNames(List<TitleAlternativeName>? altNames, Guid titleId)
         {
-            if (command.AlternativeNames == null || command.AlternativeNames.Count == 0)
+            var result = new List<AlternativeName>();
+            if (altNames == null || altNames.Count == 0)
             {
-                return;
+                return result;
             }
 
-            foreach (var altName in command.AlternativeNames)
+            foreach (var altName in altNames)
             {
-                AlternativeName newAltName = new AlternativeName(
-                    title.Id,
+                result.Add(new AlternativeName(
+                    titleId,
                     altName.Name,
-                    altName.LanguageCodeId);
-
-                title.AlternativeNames.Add(newAltName);
+                    altName.LanguageCodeId));
             }
+
+            return result;
         }
 
-        private void PopulateTitleAuthors(CreateTitleCommand command, Title title)
+        private List<TitleAuthor> GenerateTitleAuthors(List<Guid>? authorIds, Guid titleId)
         {
-            if (command.Authors == null || command.Authors.Count == 0)
+            var result = new List<TitleAuthor>();
+            if (authorIds == null || authorIds.Count == 0)
             {
-                return;
+                return result;
             }
 
-            foreach (var authorId in command.Authors)
+            foreach (var authorId in authorIds)
             {
-                TitleAuthor newAuthor = new TitleAuthor(
-                    title.Id,
-                    authorId);
-
-                title.TitleAuthors.Add(newAuthor);
+                result.Add(new TitleAuthor(titleId, authorId));
             }
+
+            return result;
         }
 
-        private void PopulateTitleArtists(CreateTitleCommand command, Title title)
+        private List<TitleArtist> GenerateTitleArtists(List<Guid>? artistIds, Guid titleId)
         {
-            if (command.Artists == null || command.Artists.Count == 0)
+            var result = new List<TitleArtist>();
+            if (artistIds == null || artistIds.Count == 0)
             {
-                return;
+                return result;
             }
 
-            foreach (var artistId in command.Artists)
+            foreach (var artistId in artistIds)
             {
-                TitleArtist newArtist = new TitleArtist(
-                    title.Id,
-                    artistId);
-
-                title.TitleArtists.Add(newArtist);
+                result.Add(new TitleArtist(titleId, artistId));
             }
+
+            return result;
         }
 
-        private (bool, int) ValidateAlternativeNames(CreateTitleCommand command, IUnitOfWork unitOfWork)
+        private async Task<List<TitleAlternativeName>> FindInvalidAlternativeNames(List<TitleAlternativeName>? newAltNames)
         {
-            if (command.AlternativeNames == null || command.AlternativeNames.Count == 0)
+            if (newAltNames == null || newAltNames.Count == 0)
             {
-                return (true, -1);
+                return new List<TitleAlternativeName>();
             }
 
-            var languageCodeIds = _unitOfWork.GetRepository<ILanguageCodeRepository>()
+            var cachedLanguages = await _distributedCache.GetStringAsync(LanguageCodeCachingConstants.GetAllKey);
+            var newNameLanguageCodeIds = new HashSet<string>(newAltNames.Select(n => n.LanguageCodeId));
+
+            if (string.IsNullOrEmpty(cachedLanguages))
+            {
+                var languageRepository = _unitOfWork.GetRepository<ILanguageCodeRepository>();
+                var existingLanguagesIds = await languageRepository.GetQueryableSet()
+                    .Select(x => x.Id)
+                    .Where(x => newNameLanguageCodeIds.Contains(x))
+                    .ToListAsync();
+
+                return newAltNames.Where(x => !existingLanguagesIds.Contains(x.LanguageCodeId)).ToList();
+            }
+
+            var cachedExistingLanguagesIds = JsonConvert
+                .DeserializeObject<List<LanguageCodeResponse>>(cachedLanguages)!
+                .Select(x => x.Id)
+                .Where(newNameLanguageCodeIds.Contains)
+                .ToList();
+
+            return newAltNames.Where(x => !cachedExistingLanguagesIds!.Contains(x.LanguageCodeId)).ToList();
+        }
+
+        private async Task<List<int>> FindInvalidGenres(List<int>? newGenres)
+        {
+            if (newGenres == null || newGenres.Count == 0)
+            {
+                return new List<int>();
+            }
+
+            var existingGenreIds = await _unitOfWork.GetRepository<IGenreRepository>()
                 .GetQueryableSet()
                 .Select(x => x.Id)
-                .ToHashSet();
+                .Where(x => newGenres.Contains(x))
+                .ToListAsync();
 
-            for (int i = 0; i < command.AlternativeNames.Count; i++)
-            {
-                if (!languageCodeIds.Contains(command.AlternativeNames[i].LanguageCodeId))
-                {
-                    return (false, i);
-                }
-            }
-
-            return (true, -1);
+            return newGenres.Except(existingGenreIds).ToList();
         }
 
-        private (bool, int) ValidateGenres(List<int>? genres, IUnitOfWork unitOfWork)
-        {
-            if (genres == null || genres.Count == 0)
-            {
-                return (true, -1);
-            }
-
-            var genreIds = unitOfWork.GetRepository<IGenreRepository>()
-                .GetQueryableSet()
-                .Select(x => x.Id)
-                .ToHashSet();
-
-            for (int i = 0; i < genres.Count; i++)
-            {
-                if (!genreIds.Contains(genres[i]))
-                {
-                    return (false, i);
-                }
-            }
-
-            return (true, -1);
-        }
-
-        private (bool, int) ValidateTitleCreators(List<Guid>? titleCreators, HashSet<Guid> creatorIds)
+        private List<Guid> FindInvalidCreators(List<Guid>? titleCreators, HashSet<Guid> creatorIds)
         {
             if (titleCreators == null || titleCreators.Count == 0)
             {
-                return (true, -1);
+                return new List<Guid>();
             }
 
-            for (int i = 0; i < titleCreators.Count; i++)
-            {
-                if (!creatorIds.Contains(titleCreators[i]))
-                {
-                    return (false, i);
-                }
-            }
+            var existingCreatorIds = creatorIds.Where(titleCreators.Contains).ToList();
 
-            return (true, -1);
+            return titleCreators.Except(existingCreatorIds).ToList();
         }
     }
 }

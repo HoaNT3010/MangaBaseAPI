@@ -30,16 +30,21 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
                 .WithMessage("Title publish date must be later than year 1900");
 
             RuleFor(x => x.Genres)
-                .Must(x => x == null || x.Count <= 50).WithMessage("Title cannot have more than 50 genres");
+                .Must(x => x == null || x.Count <= 50).WithMessage("Title cannot have more than 50 genres")
+                .Must(x => x == null || x.Distinct().Count() == x.Count).WithMessage("Title's genres cannot contains duplicate(s)");
 
             RuleFor(x => x.AlternativeNames)
-                .Must(x => x == null || x.Count <= 50).WithMessage("Title cannot have more than 50 alternative names");
+                .Must(x => x == null || x.Count <= 50).WithMessage("Title cannot have more than 50 alternative names")
+                .Must(x => x == null || x.Select(item => item.Name).Distinct().Count() == x.Count)
+                .WithMessage("Title's alternative names cannot contains duplicate(s) with same name"); ;
 
             RuleFor(x => x.Authors)
-                .Must(x => x == null || x.Count <= 10).WithMessage("Title cannot have more than 10 authors");
+                .Must(x => x == null || x.Count <= 10).WithMessage("Title cannot have more than 10 authors")
+                .Must(x => x == null || x.Distinct().Count() == x.Count).WithMessage("Title's authors cannot contains duplicate(s)");
 
             RuleFor(x => x.Artists)
-                .Must(x => x == null || x.Count <= 10).WithMessage("Title cannot have more than 10 artists");
+                .Must(x => x == null || x.Count <= 10).WithMessage("Title cannot have more than 10 artists")
+                .Must(x => x == null || x.Distinct().Count() == x.Count).WithMessage("Title's artists cannot contains duplicate(s)");
 
             RuleForEach(x => x.AlternativeNames)
                 .SetValidator(new TitleAlternativeNameValidator());
