@@ -15,7 +15,7 @@
             Value = null;
         }
 
-        private Error(string code, string description, ErrorType errorType, object value)
+        private Error(string code, string description, ErrorType errorType, object? value)
         {
             Code = code;
             Description = description;
@@ -60,6 +60,11 @@
 
         public static Error Unauthorized(string code, string description, object value) =>
             new(code, description, ErrorType.Unauthorized, value);
+
+        public static Error ErrorWithValue(Error error, object? value = null)
+        {
+            return new(error.Code, error.Description, error.Type, value);
+        }
     }
 
     public enum ErrorType
