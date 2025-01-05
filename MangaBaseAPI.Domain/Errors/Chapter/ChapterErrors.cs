@@ -1,0 +1,22 @@
+﻿using MangaBaseAPI.Domain.Abstractions;
+
+namespace MangaBaseAPI.Domain.Errors.Chapter
+{
+    public class ChapterErrors
+    {
+        #region Create
+        public static readonly Error Create_ExistedChapterName = Error.Conflict("Chapter.Create.ExistedChapterName", "A chapter with the same name has existed. Only new chapter with unique name can be created");
+        public static readonly Error Create_ExistedChapterIndex = Error.Conflict("Chapter.Create.ExistedChapterIndex", "A chapter with the same index has existed. Only new chapter with unique index can be created");
+        public static readonly Error Create_CreateChapterFailed = Error.Failure("Chapter.Create.CreateChapterFailed", "Unexpected error(s) occurred when trying to create new chapter");
+        public static readonly Error Create_UploadImagesFailed = Error.Failure("Chapter.Create.UploadImagesFailed", "Unexpected error(s) occurred when trying to upload images of new chapter to storage");
+        #endregion
+
+        #region Update
+        public static readonly Error Update_UpdateChapterFailed = Error.Failure("Chapter.Update.UpdateChapterFailed", "Unexpected error(s) occurred when trying to update chapter");
+        #endregion
+
+        #region General
+        public static readonly Error General_ChapterNotFound = Error.NotFound("Chapter.General.ChapterNotFound", "No chapter found with the given ID");
+        #endregion
+    }
+}

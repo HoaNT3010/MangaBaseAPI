@@ -19,5 +19,26 @@ namespace MangaBaseAPI.Domain.Entities
         public User Uploader { get; set; } = default!;
 
         public ICollection<ChapterImage> ChapterImages { get; set; } = default!;
+
+        public Chapter()
+        {
+        }
+
+        public Chapter(Guid id,
+            string name,
+            float index,
+            int volume,
+            Guid titleId,
+            Guid uploaderId)
+        {
+            Id = id;
+            Name = name;
+            Index = index;
+            Volume = volume;
+            TitleId = titleId;
+            UploaderId = uploaderId;
+            ChapterImages = new List<ChapterImage>();
+            IsDeleted = false;
+        }
     }
 }

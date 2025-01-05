@@ -4,6 +4,7 @@
     {
         const string TitleFolderName = "titles";
         const string GoogleCloudStorageUrl = "https://storage.googleapis.com";
+        const string ChapterFolderName = "chapters";
 
         public static string GenerateCoverImagePath(string titleId, string fileName)
         {
@@ -12,7 +13,7 @@
 
         public static string GenerateChapterImagePath(string titleId, string chapterIndex, string fileName)
         {
-            return $"{TitleFolderName}/{titleId}/{chapterIndex}/{fileName}";
+            return $"{TitleFolderName}/{titleId}/{ChapterFolderName}/{chapterIndex}/{fileName}";
         }
 
         /// <summary>
@@ -23,7 +24,7 @@
         /// <returns></returns>
         public static string GenerateChapterImageFolderPath(string titleId, string chapterIndex)
         {
-            return $"{TitleFolderName}/{titleId}/{chapterIndex}/";
+            return $"{TitleFolderName}/{titleId}/{ChapterFolderName}/{chapterIndex}/";
         }
 
         public static string GenerateFullFileUrl(string bucketName, string filePath)
