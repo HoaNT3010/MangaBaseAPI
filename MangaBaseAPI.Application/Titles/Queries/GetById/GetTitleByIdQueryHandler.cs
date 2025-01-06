@@ -53,6 +53,14 @@ namespace MangaBaseAPI.Application.Titles.Queries.GetById
                 {
                     return Result.Failure<GetTitleByIdResponse>(TitleErrors.General_TitleNotFound);
                 }
+                if (title.IsHidden)
+                {
+                    return Result.Failure<GetTitleByIdResponse>(TitleErrors.General_TitleHidden);
+                }
+                if (title.IsDeleted)
+                {
+                    return Result.Failure<GetTitleByIdResponse>(TitleErrors.General_TitleDeleted);
+                }
 
                 var result = _mapper.Map<GetTitleByIdResponse>(title);
 

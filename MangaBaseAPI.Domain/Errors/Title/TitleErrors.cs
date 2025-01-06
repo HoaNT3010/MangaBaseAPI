@@ -27,6 +27,8 @@ namespace MangaBaseAPI.Domain.Errors.Title
 
         #region General
         public static readonly Error General_TitleNotFound = Error.NotFound("Title.General.TitleNotFound", "No title found with the given ID");
+        public static readonly Error General_TitleHidden = Error.Forbidden("Title.General.TitleHidden", "Title with the given ID has been hidden and cannot be access");
+        public static readonly Error General_TitleDeleted = Error.Forbidden("Title.General.TitleDeleted", "Title with the given ID has been deleted and cannot be access");
         #endregion
     }
 }

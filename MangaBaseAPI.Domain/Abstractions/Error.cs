@@ -65,6 +65,9 @@
         {
             return new(error.Code, error.Description, error.Type, value);
         }
+
+        public static Error Forbidden(string code, string description) =>
+            new(code, description, ErrorType.Forbidden);
     }
 
     public enum ErrorType
@@ -75,5 +78,6 @@
         NotFound = 3,
         Conflict = 4,
         Unauthorized = 5,
+        Forbidden = 6,
     }
 }

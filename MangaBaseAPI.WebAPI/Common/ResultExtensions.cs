@@ -57,6 +57,7 @@ namespace MangaBaseAPI.WebAPI.Common
                     ErrorType.Conflict => StatusCodes.Status409Conflict,
                     ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
                     ErrorType.None => 0,
+                    ErrorType.Forbidden => StatusCodes.Status403Forbidden,
                     _ => StatusCodes.Status500InternalServerError
                 };
 
@@ -68,6 +69,7 @@ namespace MangaBaseAPI.WebAPI.Common
                     ErrorType.Conflict => "Conflict",
                     ErrorType.Unauthorized => "Unauthorized",
                     ErrorType.None => "",
+                    ErrorType.Forbidden => "Forbidden",
                     _ => "Server Failure"
                 };
 
@@ -79,6 +81,7 @@ namespace MangaBaseAPI.WebAPI.Common
                     ErrorType.Conflict => "https://tools.ietf.org/html/rfc7231#section-6.5.8",
                     ErrorType.Unauthorized => "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1",
                     ErrorType.None => "",
+                    ErrorType.Forbidden => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3",
                     _ => "https://tools.ietf.org/html/rfc7231#section-6.6.1"
                 };
         }
