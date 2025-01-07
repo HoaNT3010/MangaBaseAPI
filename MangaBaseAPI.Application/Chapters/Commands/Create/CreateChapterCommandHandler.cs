@@ -112,7 +112,9 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             List<ChapterImage> result = new List<ChapterImage>();
             for (int i = 0; i < imagePaths.Count; i++)
             {
-                result.Add(new ChapterImage(chapterId, FilePathGenerator.GenerateFullFileUrl(_cloudStorage.GetBucketName(), imagePaths[i])));
+                result.Add(new ChapterImage(chapterId,
+                    FilePathGenerator.GenerateFullFileUrl(_cloudStorage.GetBucketName(), imagePaths[i]),
+                    i + 1));
             }
             return result;
         }

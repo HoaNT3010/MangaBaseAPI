@@ -16,10 +16,12 @@ namespace MangaBaseAPI.Domain.Entities
         }
 
         public ChapterImage(Guid chapterId,
-            string url)
+            string url,
+            int index)
         {
             Url = url;
             ChapterId = chapterId;
+            Index = index;
         }
     }
 }
