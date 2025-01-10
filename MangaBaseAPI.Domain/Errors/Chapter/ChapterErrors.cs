@@ -17,6 +17,7 @@ namespace MangaBaseAPI.Domain.Errors.Chapter
 
         #region General
         public static readonly Error General_ChapterNotFound = Error.NotFound("Chapter.General.ChapterNotFound", "No chapter found with the given ID");
+        public static readonly Error General_ChapterDeleted = Error.Forbidden("Chapter.General.ChapterDeleted", "Chapter with the given ID has been deleted and cannot be access");
         #endregion
     }
 }
