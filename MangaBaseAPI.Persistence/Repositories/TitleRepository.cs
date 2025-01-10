@@ -10,6 +10,21 @@ namespace MangaBaseAPI.Persistence.Repositories
         {
         }
 
+        public async Task<bool> IsTitleDeleted(Guid titleId)
+        {
+            return await _dbSet.AnyAsync(x => x.Id == titleId && x.IsDeleted);
+        }
+
+        public async Task<bool> IsTitleExists(Guid titleId)
+        {
+            return await _dbSet.AnyAsync(x => x.Id == titleId);
+        }
+
+        public async Task<bool> IsTitleHidden(Guid titleId)
+        {
+            return await _dbSet.AnyAsync(x => x.Id == titleId && x.IsHidden);
+        }
+
         public async Task<bool> IsTitleNameTaken(string titleName)
         {
             return await _dbSet.AnyAsync(x => x.Name == titleName);
