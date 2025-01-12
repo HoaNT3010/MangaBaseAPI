@@ -8,6 +8,7 @@ using Serilog;
 using MangaBaseAPI.Infrastructure.Caching.Redis;
 using MangaBaseAPI.Infrastructure.Storage;
 using MangaBaseAPI.Infrastructure.Authorization;
+using MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -38,7 +39,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
         .AddAuthorizationPolicies()
         .AddSwagger()
         .AddRedisCaching(builder.Configuration)
-        .AddStorageServices();
+        .AddStorageServices()
+        .AddHangfireServices(builder.Configuration);
 }
 
 var app = builder.Build();
@@ -46,7 +48,8 @@ var app = builder.Build();
     app.RegisterPipelines()
         .AddSwagger()
         .UseGlobalErrorHandling()
-        .RegisterMiddlewares();
+        .RegisterMiddlewares()
+        .AddHangfireDashboard();
 
     app.Run();
 }
