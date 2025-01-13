@@ -1,6 +1,8 @@
-﻿using MangaBaseAPI.Contracts.LanguageCodes.GetAll;
+﻿using MangaBaseAPI.Contracts.Common.Response;
+using MangaBaseAPI.Contracts.LanguageCodes.GetAll;
 using MangaBaseAPI.Domain.Abstractions;
 using MangaBaseAPI.Domain.Constants.Caching;
+using MangaBaseAPI.Domain.Constants.Location;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Title;
 using MangaBaseAPI.Domain.Repositories;
@@ -12,7 +14,7 @@ using Newtonsoft.Json;
 namespace MangaBaseAPI.Application.Titles.Commands.Create
 {
     public class CreateTitleCommandHandler
-        : IRequestHandler<CreateTitleCommand, Result>
+        : IRequestHandler<CreateTitleCommand, Result<PostRequestResponse>>
     {
         readonly IUnitOfWork _unitOfWork;
         readonly IDistributedCache _distributedCache;
@@ -25,7 +27,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             _distributedCache = distributedCache;
         }
 
-        public async Task<Result> Handle(
+        public async Task<Result<PostRequestResponse>> Handle(
             CreateTitleCommand request,
             CancellationToken cancellationToken)
         {
@@ -33,24 +35,22 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             var titleRepo = _unitOfWork.GetRepository<ITitleRepository>();
             if (await titleRepo.IsTitleNameTaken(request.Name))
             {
-                return Result.Failure(TitleErrors.Create_ExistedTitleName);
+                return Result.Failure<PostRequestResponse>(TitleErrors.Create_ExistedTitleName);
             }
 
             var invalidAltNames = await FindInvalidAlternativeNames(request.AlternativeNames);
             if (invalidAltNames.Any())
             {
-                return Result.Failure(
-                    Error.Validation(TitleErrors.Create_InvalidAltNameLanguage.Code,
-                    TitleErrors.Create_InvalidAltNameLanguage.Description,
+                return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(
+                    TitleErrors.Create_InvalidAltNameLanguage,
                     invalidAltNames));
             }
 
             var invalidGenres = await FindInvalidGenres(request.Genres);
             if (invalidGenres.Any())
             {
-                return Result.Failure(
-                    Error.Validation(TitleErrors.Create_InvalidGenre.Code,
-                    TitleErrors.Create_InvalidGenre.Description,
+                return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(
+                    TitleErrors.Create_InvalidGenre,
                     invalidGenres));
             }
 
@@ -63,18 +63,16 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             var invalidAuthors = FindInvalidCreators(request.Authors, existingTitleCreatorsIds);
             if (invalidAuthors.Any())
             {
-                return Result.Failure(
-                    Error.Validation(TitleErrors.Create_InvalidAuthor.Code,
-                    TitleErrors.Create_InvalidAuthor.Description,
+                return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(
+                    TitleErrors.Create_InvalidAuthor,
                     invalidAuthors));
             }
 
             var invalidArtists = FindInvalidCreators(request.Artists, existingTitleCreatorsIds);
             if (invalidArtists.Any())
             {
-                return Result.Failure(
-                    Error.Validation(TitleErrors.Create_InvalidArtist.Code,
-                    TitleErrors.Create_InvalidArtist.Description,
+                return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(
+                    TitleErrors.Create_InvalidArtist,
                     invalidArtists));
             }
 
@@ -97,10 +95,10 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             var result = await _unitOfWork.SaveChangeAsync();
             if (result == 0)
             {
-                return Result.Failure(TitleErrors.Create_CreateTitleFailed);
+                return Result.Failure<PostRequestResponse>(TitleErrors.Create_CreateTitleFailed);
             }
 
-            return Result.SuccessNullError();
+            return Result.SuccessNullError(new PostRequestResponse($"{LocationConstants.ApiV1BaseLocation}{LocationConstants.TitleResource}{newTitleId.ToString()}"));
         }
 
         private List<TitleGenre> GenerateTitleGenres(List<int>? newGenresId, Guid titleId)

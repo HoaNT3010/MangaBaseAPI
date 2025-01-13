@@ -1,4 +1,5 @@
-﻿using MangaBaseAPI.Domain.Abstractions;
+﻿using MangaBaseAPI.Contracts.Common.Response;
+using MangaBaseAPI.Domain.Abstractions;
 using MediatR;
 
 namespace MangaBaseAPI.Application.Titles.Commands.Create
@@ -15,7 +16,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
         List<TitleAlternativeName>? AlternativeNames,
         List<Guid>? Authors,
         List<Guid>? Artists,
-        Guid UploaderId) : IRequest<Result>;
+        Guid UploaderId) : IRequest<Result<PostRequestResponse>>;
 
     public record TitleAlternativeName(
         string Name,
