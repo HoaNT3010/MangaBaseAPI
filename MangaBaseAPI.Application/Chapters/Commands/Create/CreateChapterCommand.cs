@@ -1,4 +1,5 @@
-﻿using MangaBaseAPI.Domain.Abstractions;
+﻿using MangaBaseAPI.Contracts.Common.Response;
+using MangaBaseAPI.Domain.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
@@ -10,5 +11,5 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
         float Index,
         int Volume,
         IFormFileCollection ChapterImages,
-        Guid UploaderId) : IRequest<Result>;
+        Guid UploaderId) : IRequest<Result<PostRequestResponse>>;
 }

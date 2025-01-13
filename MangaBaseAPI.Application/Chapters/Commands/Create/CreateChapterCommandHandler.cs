@@ -1,6 +1,8 @@
 ﻿using MangaBaseAPI.Application.Common.Utilities.Storage;
+using MangaBaseAPI.Contracts.Common.Response;
 using MangaBaseAPI.CrossCuttingConcerns.Storage.GoogleCloudStorage;
 using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Location;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Chapter;
 using MangaBaseAPI.Domain.Errors.Title;
@@ -13,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace MangaBaseAPI.Application.Chapters.Commands.Create
 {
     public class CreateChapterCommandHandler
-        : IRequestHandler<CreateChapterCommand, Result>
+        : IRequestHandler<CreateChapterCommand, Result<PostRequestResponse>>
     {
         readonly IUnitOfWork _unitOfWork;
         readonly IGoogleCloudStorageService _cloudStorage;
@@ -29,7 +31,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             _logger = logger;
         }
 
-        public async Task<Result> Handle(
+        public async Task<Result<PostRequestResponse>> Handle(
             CreateChapterCommand request,
             CancellationToken cancellationToken)
         {
@@ -39,7 +41,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
 
             if (!isTitleExist)
             {
-                return Result.Failure(Error.ErrorWithValue(TitleErrors.General_TitleNotFound, request.TitleId));
+                return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(TitleErrors.General_TitleNotFound, request.TitleId));
             }
 
             var chapterRepository = _unitOfWork.GetRepository<IChapterRepository>();
@@ -54,11 +56,11 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             {
                 if (duplicatedNamesAndIndexes.Any(x => string.Compare(x.Name, trimmedChapterName, true) == 0))
                 {
-                    return Result.Failure(Error.ErrorWithValue(ChapterErrors.Create_ExistedChapterName, trimmedChapterName));
+                    return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(ChapterErrors.Create_ExistedChapterName, trimmedChapterName));
                 }
                 if (duplicatedNamesAndIndexes.Any(x => x.Index == request.Index))
                 {
-                    return Result.Failure(Error.ErrorWithValue(ChapterErrors.Create_ExistedChapterIndex, request.Index));
+                    return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(ChapterErrors.Create_ExistedChapterIndex, request.Index));
                 }
             }
 
@@ -75,7 +77,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             if (!uploadImageResult || successfulUpload < request.ChapterImages.Count)
             {
                 await DeleteChapterImages(chapterImageNames, successfulUpload);
-                return Result.Failure(ChapterErrors.Create_UploadImagesFailed);
+                return Result.Failure<PostRequestResponse>(ChapterErrors.Create_UploadImagesFailed);
             }
 
             try
@@ -87,10 +89,10 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             {
                 _logger.LogError("Failed to create new chapter: {Message}", ex.Message);
                 await DeleteChapterImages(chapterImageNames, successfulUpload);
-                return Result.Failure(ChapterErrors.Create_CreateChapterFailed);
+                return Result.Failure<PostRequestResponse>(ChapterErrors.Create_CreateChapterFailed);
             }
 
-            return Result.SuccessNullError();
+            return Result.SuccessNullError(new PostRequestResponse($"{LocationConstants.ApiV1BaseLocation}{LocationConstants.ChapterResource}{newChapter.Id.ToString()}"));
         }
 
         private List<string> GenerateImageNames(IFormFileCollection images, Guid titleId, float chapterIndex)
