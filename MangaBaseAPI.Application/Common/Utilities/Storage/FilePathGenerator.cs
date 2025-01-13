@@ -5,6 +5,7 @@
         const string TitleFolderName = "titles";
         const string GoogleCloudStorageUrl = "https://storage.googleapis.com";
         const string ChapterFolderName = "chapters";
+        const string BaseFileUrl = "https://storage.googleapis.com/mangabase/";
 
         public static string GenerateCoverImagePath(string titleId, string fileName)
         {
@@ -30,6 +31,21 @@
         public static string GenerateFullFileUrl(string bucketName, string filePath)
         {
             return $"{GoogleCloudStorageUrl}/{bucketName}/{filePath}";
+        }
+
+        public static string GenerateFullFileUrl(string filePath)
+        {
+            return $"{BaseFileUrl}{filePath}";
+        }
+
+        public static string ExtractFilePath(string fileUrl)
+        {
+            if (string.IsNullOrEmpty(fileUrl))
+            {
+                throw new InvalidOperationException("File URL cannot be null or empty");
+            }
+
+            return fileUrl.Substring(BaseFileUrl.Length);
         }
     }
 }

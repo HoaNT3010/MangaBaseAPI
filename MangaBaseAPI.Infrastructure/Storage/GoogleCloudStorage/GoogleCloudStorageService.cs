@@ -39,7 +39,7 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
             {
                 _logger.LogInformation("{@ServiceName} - {@MethodName}: Empty files list, cancelled files deleting operation",
                 typeof(GoogleCloudStorageService).Name,
-                nameof(DeleteFileAsync));
+                nameof(DeleteMultipleFilesAsync));
 
                 return;
             }
@@ -51,7 +51,7 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
 
             _logger.LogInformation("{@ServiceName} - {@MethodName}: Successfully deleted {@FileCount} file(s) from cloud storage",
                 typeof(GoogleCloudStorageService).Name,
-                nameof(DeleteFileAsync),
+                nameof(DeleteMultipleFilesAsync),
                 fileNames.Count);
         }
 
@@ -123,7 +123,7 @@ namespace MangaBaseAPI.Infrastructure.Storage.GoogleCloudStorage
 
             _logger.LogInformation("{@ServiceName} - {@MethodName}: Successfully uploaded {@FileCount} file(s) to cloud storage",
                 typeof(GoogleCloudStorageService).Name,
-                nameof(DeleteFileAsync),
+                nameof(UploadMultipleFilesAsync),
                 files.Count());
         }
 
