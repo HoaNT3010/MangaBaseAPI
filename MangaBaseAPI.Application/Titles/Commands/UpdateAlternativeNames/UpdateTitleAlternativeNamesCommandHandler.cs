@@ -61,6 +61,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
                 return Result.Failure(TitleErrors.Update_UpdateAltNameFailed);
             }
 
+            _ = _distributedCache.RemoveAsync(TitleCachingConstants.GetByIdKey + request.Id.ToString(), cancellationToken);
+
             return Result.SuccessNullError();
         }
 

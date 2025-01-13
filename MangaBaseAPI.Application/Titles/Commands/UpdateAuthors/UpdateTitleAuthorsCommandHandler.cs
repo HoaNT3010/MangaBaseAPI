@@ -1,9 +1,11 @@
 ﻿using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Caching;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Title;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
 {
@@ -11,11 +13,14 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
         : IRequestHandler<UpdateTitleAuthorsCommand, Result>
     {
         readonly IUnitOfWork _unitOfWork;
+        readonly IDistributedCache _cache;
 
         public UpdateTitleAuthorsCommandHandler(
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
+            _cache = cache;
         }
 
         public async Task<Result> Handle(
@@ -52,6 +57,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
             {
                 return Result.Failure(TitleErrors.Update_UpdateAuthorFailed);
             }
+
+            _ = _cache.RemoveAsync(ChapterCachingConstants.GetByIdKey + request.Id, cancellationToken);
 
             return Result.SuccessNullError();
         }

@@ -61,6 +61,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
                 return Result.Failure(TitleErrors.Update_UpdateGenreFailed);
             }
 
+            _ = _distributedCache.RemoveAsync(ChapterCachingConstants.GetByIdKey + request.Id, cancellationToken);
+
             return Result.SuccessNullError();
         }
 

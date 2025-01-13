@@ -1,10 +1,12 @@
 ﻿using MangaBaseAPI.Application.Common.Utilities.Storage;
 using MangaBaseAPI.CrossCuttingConcerns.Storage.GoogleCloudStorage;
 using MangaBaseAPI.Domain.Abstractions;
+using MangaBaseAPI.Domain.Constants.Caching;
 using MangaBaseAPI.Domain.Errors.Infrastructure;
 using MangaBaseAPI.Domain.Errors.Title;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
@@ -15,15 +17,18 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGoogleCloudStorageService _storageService;
         private readonly ILogger<UpdateTitleCoverImageCommandHandler> _logger;
+        readonly IDistributedCache _cache;
 
         public UpdateTitleCoverImageCommandHandler(
             IUnitOfWork unitOfWork,
             IGoogleCloudStorageService storageService,
-            ILogger<UpdateTitleCoverImageCommandHandler> logger)
+            ILogger<UpdateTitleCoverImageCommandHandler> logger,
+            IDistributedCache cache)
         {
             _unitOfWork = unitOfWork;
             _storageService = storageService;
             _logger = logger;
+            _cache = cache;
         }
 
         public async Task<Result> Handle(
@@ -86,6 +91,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
                 _logger.LogError("Failed to save title's new cover image url: {Message}", ex.Message);
                 return Result.Failure(TitleErrors.Update_UpdateTitleCoverFailed);
             }
+
+            _ = _cache.RemoveAsync(ChapterCachingConstants.GetByIdKey + request.Id, cancellationToken);
 
             return Result.SuccessNullError();
         }
