@@ -47,15 +47,10 @@ namespace MangaBaseAPI.Application.LanguageCodes.Queries.GetAll
                 {
                     string languagesListString = JsonConvert.SerializeObject(languagesList);
 
-                    var cacheOptions = new DistributedCacheEntryOptions()
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
-                    };
-
                     await _distributedCache.SetStringAsync(
                         LanguageCodeCachingConstants.GetAllKey,
                         languagesListString,
-                        cacheOptions,
+                        CachingOptionConstants.YearlyCachingOption,
                         cancellationToken);
                 }
 

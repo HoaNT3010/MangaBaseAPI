@@ -44,15 +44,9 @@ namespace MangaBaseAPI.Application.Genres.Queries.GetAll
                 {
                     string genresListString = JsonConvert.SerializeObject(genresList);
 
-                    var cacheOptions = new DistributedCacheEntryOptions()
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
-                        //SlidingExpiration = TimeSpan.FromHours(1),
-                    };
-
                     await _distributedCache.SetStringAsync(GenreCachingConstants.GetAllKey,
                        genresListString,
-                       cacheOptions,
+                       CachingOptionConstants.YearlyCachingOption,
                        cancellationToken);
                 }
 

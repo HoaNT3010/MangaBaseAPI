@@ -65,15 +65,11 @@ namespace MangaBaseAPI.Application.Titles.Queries.GetById
                 var result = _mapper.Map<GetTitleByIdResponse>(title);
 
                 string resultJsonString = JsonConvert.SerializeObject(result);
-                var cacheOptions = new DistributedCacheEntryOptions()
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3),
-                    SlidingExpiration = TimeSpan.FromHours(1),
-                };
 
-                await _distributedCache.SetStringAsync(TitleCachingConstants.GetByIdKey + request.Id.ToString(),
+                await _distributedCache.SetStringAsync(
+                    TitleCachingConstants.GetByIdKey + request.Id.ToString(),
                     resultJsonString,
-                    cacheOptions,
+                    CachingOptionConstants.MediumCachingOption,
                     cancellationToken);
 
                 return Result.SuccessNullError(result);

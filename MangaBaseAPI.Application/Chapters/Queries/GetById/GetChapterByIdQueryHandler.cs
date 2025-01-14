@@ -56,15 +56,10 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetById
 
                 var result = _mapper.Map<GetChapterByIdResponse>(chapter);
                 string resultJsonString = JsonConvert.SerializeObject(result);
-                var cacheOptions = new DistributedCacheEntryOptions()
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(3),
-                    SlidingExpiration = TimeSpan.FromHours(1),
-                };
 
                 await _cache.SetStringAsync(ChapterCachingConstants.GetByIdKey + request.Id.ToString(),
                     resultJsonString,
-                    cacheOptions,
+                    CachingOptionConstants.MonthlyCachingOption,
                     cancellationToken);
 
                 return Result.SuccessNullError(result);

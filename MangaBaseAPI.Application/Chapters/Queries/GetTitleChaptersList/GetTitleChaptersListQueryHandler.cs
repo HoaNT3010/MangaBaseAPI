@@ -47,16 +47,10 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetTitleChaptersList
                 var chapters = await chapterRepository.ToListAsync(chapterRepository.ApplySpecification(new GetTitleChaptersListSpecification(request.Id)));
                 var result = _mapper.Map<List<GetTitleChaptersListResponse>>(chapters);
 
-                var cacheOptions = new DistributedCacheEntryOptions()
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
-                    SlidingExpiration = TimeSpan.FromDays(1),
-                };
-
                 await _cache.SetStringAsync(
                     ChapterCachingConstants.GetTitleChaptersListConstant(request.Id),
                     JsonConvert.SerializeObject(result),
-                    cacheOptions,
+                    CachingOptionConstants.WeeklyCachingOption,
                     cancellationToken);
 
                 return Result.SuccessNullError(result);

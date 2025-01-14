@@ -30,5 +30,37 @@ namespace MangaBaseAPI.Domain.Constants.Caching
             AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1),
             SlidingExpiration = TimeSpan.FromHours(1),
         };
+
+        /// <summary>
+        /// Caching option for resource with Absolute expiration of <b>1 day</b> and no Sliding expiration.
+        /// </summary>
+        public static readonly DistributedCacheEntryOptions DailyCachingOption = new DistributedCacheEntryOptions()
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(1),
+        };
+
+        /// <summary>
+        /// Caching option for resource with Absolute expiration of <b>1 week</b> and no Sliding expiration.
+        /// </summary>
+        public static readonly DistributedCacheEntryOptions WeeklyCachingOption = new DistributedCacheEntryOptions()
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
+        };
+
+        /// <summary>
+        /// Caching option for resource with Absolute expiration of <b>1 month (30 days)</b> and no Sliding expiration.
+        /// </summary>
+        public static readonly DistributedCacheEntryOptions MonthlyCachingOption = new DistributedCacheEntryOptions()
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(30),
+        };
+
+        /// <summary>
+        /// Caching option for resource with Absolute expiration of <b>1 year (365 days)</b> and no Sliding expiration.
+        /// </summary>
+        public static readonly DistributedCacheEntryOptions YearlyCachingOption = new DistributedCacheEntryOptions()
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(365),
+        };
     }
 }
