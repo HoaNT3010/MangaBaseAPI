@@ -49,7 +49,8 @@ var app = builder.Build();
         .AddSwagger()
         .UseGlobalErrorHandling()
         .RegisterMiddlewares()
-        .AddHangfireDashboard();
+        .AddHangfireDashboard()
+        .UseHealthChecks();
 
     app.Run();
 }

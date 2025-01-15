@@ -17,6 +17,9 @@ namespace MangaBaseAPI.Infrastructure.Caching.Redis
                 options.InstanceName = configuration.GetSection(RedisSection)[RedisInstanceNameSection];
             });
 
+            services.AddHealthChecks()
+                .AddRedis(configuration.GetSection(RedisSection)[RedisConfigurationSection]!);
+
             return services;
         }
     }

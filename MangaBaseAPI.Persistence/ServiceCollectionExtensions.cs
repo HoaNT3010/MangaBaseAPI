@@ -33,6 +33,7 @@ namespace MangaBaseAPI.Persistence
             .AddDefaultTokenProviders();
 
             services.AddUnitOfWork();
+            services.AddDbContextHealthCheck();
 
             return services;
         }
@@ -61,6 +62,14 @@ namespace MangaBaseAPI.Persistence
             services.AddScoped<ITitleGenreRepository, TitleGenreRepository>();
             services.AddScoped<ITitleRatingRepository, TitleRatingRepository>();
             services.AddScoped<ITitleRepository, TitleRepository>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddDbContextHealthCheck(this IServiceCollection services)
+        {
+            services.AddHealthChecks()
+                .AddDbContextCheck<MangaBaseDbContext>();
 
             return services;
         }

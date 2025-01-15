@@ -3,6 +3,8 @@ using Asp.Versioning;
 using Carter;
 using Serilog;
 using MangaBaseAPI.WebAPI.Middlewares;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 namespace MangaBaseAPI.WebAPI
 {
@@ -69,6 +71,16 @@ namespace MangaBaseAPI.WebAPI
         public static WebApplication RegisterMiddlewares(this WebApplication application)
         {
             application.UseMiddleware<UserClaimsMiddleware>();
+
+            return application;
+        }
+
+        public static WebApplication UseHealthChecks(this WebApplication application)
+        {
+            application.MapHealthChecks("health", new HealthCheckOptions
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
 
             return application;
         }

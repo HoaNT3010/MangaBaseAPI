@@ -29,6 +29,8 @@ namespace MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler
 
             services.AddScoped<IHangfireBackgroundJobService, HangfireBackgroundJobService>();
 
+            services.AddHangfireHealthCheck();
+
             return services;
         }
 
@@ -40,6 +42,14 @@ namespace MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler
             }
 
             return application;
+        }
+
+        private static IServiceCollection AddHangfireHealthCheck(this IServiceCollection services)
+        {
+            services.AddHealthChecks()
+                .AddHangfire(setup => { });
+
+            return services;
         }
     }
 }
