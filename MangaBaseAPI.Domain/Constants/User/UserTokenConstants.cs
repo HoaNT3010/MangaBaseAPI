@@ -2,8 +2,14 @@
 {
     public class UserTokenConstants
     {
-        // JWT
-        public const string JwtLoginProvider = "JwtAuth";
-        public const string JwtRefreshTokenName = "RefreshToken";
+        #region Providers
+        public const string MangaBaseLoginProvider = "MangaBase";
+        #endregion
+
+        #region TokenNames
+        public const string JwtRefreshTokenName = "JwtRefreshToken";
+        public const string EmailVerificationTokenName = "EmailVerification";
+        public const string PasswordResetTokenName = "PasswordReset";
+        #endregion
     }
 }

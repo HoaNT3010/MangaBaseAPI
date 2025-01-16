@@ -45,7 +45,7 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
             string refreshToken = _jwtTokenProvider.GenerateRefreshToken();
             string accessToken = _jwtTokenProvider.GenerateAccessToken(user, roles);
 
-            var tokenUpdate = await _userManager.SetAuthenticationTokenAsync(user, UserTokenConstants.JwtLoginProvider, UserTokenConstants.JwtRefreshTokenName, refreshToken);
+            var tokenUpdate = await _userManager.SetAuthenticationTokenAsync(user, UserTokenConstants.MangaBaseLoginProvider, UserTokenConstants.JwtRefreshTokenName, refreshToken);
 
             if (!tokenUpdate.Succeeded) 
             {

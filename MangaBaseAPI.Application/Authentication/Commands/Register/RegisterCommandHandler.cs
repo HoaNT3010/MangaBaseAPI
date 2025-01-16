@@ -1,11 +1,16 @@
-﻿using MangaBaseAPI.CrossCuttingConcerns.Identity;
+﻿using MangaBaseAPI.Application.Common.Utilities.Email;
+using MangaBaseAPI.CrossCuttingConcerns.BackgroundJob.HangfireScheduler;
+using MangaBaseAPI.CrossCuttingConcerns.Email.Gmail;
+using MangaBaseAPI.CrossCuttingConcerns.Identity;
 using MangaBaseAPI.Domain.Abstractions;
 using MangaBaseAPI.Domain.Constants.Role;
+using MangaBaseAPI.Domain.Constants.User;
 using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Errors.Authentication;
 using MangaBaseAPI.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace MangaBaseAPI.Application.Authentication.Commands.Register
 {
@@ -14,19 +19,22 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
     {
         private readonly UserManager<User> _userManager;
         private readonly IPasswordHasher _passwordHasher;
-        private readonly RoleManager<Role> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
+        readonly ILogger<RegisterCommandHandler> _logger;
+        readonly IHangfireBackgroundJobService _jobService;
 
         public RegisterCommandHandler(
             UserManager<User> userManager,
             IPasswordHasher passwordHasher,
-            RoleManager<Role> roleManager,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ILogger<RegisterCommandHandler> logger,
+            IHangfireBackgroundJobService jobService)
         {
             _userManager = userManager;
             _passwordHasher = passwordHasher;
-            _roleManager = roleManager;
             _unitOfWork = unitOfWork;
+            _logger = logger;
+            _jobService = jobService;
         }
 
         public async Task<Result> Handle(
@@ -81,7 +89,43 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
                 return Result.Failure(RegisterErrors.UnexpectedError);
             }
 
+            // Add email verification process
+            await CreateAndSendEmailVerification(newUser.Id, newUser.Email!, newUser.UserName!, cancellationToken);
+
             return Result.SuccessNullError();
+        }
+
+        private async Task CreateAndSendEmailVerification(
+            Guid userId,
+            string userEmail,
+            string userDisplayName,
+            CancellationToken cancellationToken = default)
+        {
+            var verificationToken = new UserToken()
+            {
+                UserId = userId,
+                LoginProvider = UserTokenConstants.MangaBaseLoginProvider,
+                Name = UserTokenConstants.EmailVerificationTokenName,
+                Value = Guid.NewGuid().ToString(),
+                TokenExpiry = DateTimeOffset.UtcNow.AddDays(1)
+            };
+
+            var userTokenRepository = _unitOfWork.GetRepository<IUserTokenRepository>();
+            try
+            {
+                await userTokenRepository.AddAsync(verificationToken, cancellationToken);
+                await _unitOfWork.SaveChangeAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to create email verification token for user {UserId}: {Message}", userId, ex.Message);
+            }
+
+            _jobService.Enqueue<IGmailEmailService>(service => service.SendEmailAsync(
+                userEmail,
+                EmailHelper.EmailVerificationSubject,
+                EmailHelper.GenerateEmailVerificationBody(userDisplayName, EmailHelper.GenerateEmailVerificationUrl_Development(userEmail, verificationToken.Value)),
+                cancellationToken));
         }
     }
 }
