@@ -9,6 +9,8 @@ using MangaBaseAPI.Infrastructure.Caching.Redis;
 using MangaBaseAPI.Infrastructure.Storage;
 using MangaBaseAPI.Infrastructure.Authorization;
 using MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler;
+using MangaBaseAPI.Infrastructure.Email.Gmail;
+using MangaBaseAPI.CrossCuttingConcerns.Email.Gmail;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -40,7 +42,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
         .AddSwagger()
         .AddRedisCaching(builder.Configuration)
         .AddStorageServices()
-        .AddHangfireServices(builder.Configuration);
+        .AddHangfireServices(builder.Configuration)
+        .AddGmailEmailService(builder.Configuration);
 }
 
 var app = builder.Build();
