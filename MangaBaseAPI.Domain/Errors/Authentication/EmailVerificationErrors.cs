@@ -16,6 +16,7 @@ namespace MangaBaseAPI.Domain.Errors.Authentication
         public static readonly Error Verify_UserEmailVerified = Error.Validation("EmailVerification.Verify.UserEmailVerified", "The email address has been verified");
         public static readonly Error Verify_VerifyEmailFailed = Error.Failure("EmailVerification.Verify.VerifyEmailFailed", "Unexpected error(s) occurred when trying to verify user's email");
         public static readonly Error Verify_InvalidToken = Error.Validation("EmailVerification.Verify.InvalidToken", "The verification token is invalid and cannot be used to verify user's email");
+        public static readonly Error Verify_TokenExpired = Error.Validation("EmailVerification.Verify.TokenExpired", "The verification token is expired");
         #endregion
 
     }
