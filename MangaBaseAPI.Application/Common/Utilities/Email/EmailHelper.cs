@@ -16,6 +16,7 @@ namespace MangaBaseAPI.Application.Common.Utilities.Email
             return $"Hello {displayName}, " +
                 $"Follow this link to verify your email address. " +
                 $"{verificationUrl} " +
+                $"This link will expire in 24 hours. " +
                 $"If you did not ask to verify this address, you can ignore this email. " +
                 $"Thanks, " +
                 $"{ApplicationName} team.";
