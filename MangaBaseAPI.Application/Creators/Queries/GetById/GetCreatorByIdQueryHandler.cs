@@ -42,7 +42,8 @@ namespace MangaBaseAPI.Application.Creators.Queries.GetById
 
             var creatorRepository = _unitOfWork.GetRepository<ICreatorRepository>();
             var creator = await creatorRepository.FirstOrDefaultAsync(
-                creatorRepository.ApplySpecification(new GetCreatorByIdSpecification(request.Id)));
+                creatorRepository.ApplySpecification(new GetCreatorByIdSpecification(request.Id)),
+                cancellationToken);
             if (creator == null)
             {
                 return Result.Failure<GetCreatorByIdResponse>(Error.ErrorWithValue(
@@ -51,8 +52,8 @@ namespace MangaBaseAPI.Application.Creators.Queries.GetById
             }
 
             var result = _mapper.Map<GetCreatorByIdResponse>(creator);
-            result.Publications = await GetCreatorPublications(result.Id);
-            result.Artworks = await GetCreatorArtworks(result.Id);
+            result.Publications = await GetCreatorPublications(result.Id, cancellationToken);
+            result.Artworks = await GetCreatorArtworks(result.Id, cancellationToken);
 
             await _cache.SetStringAsync(
                 CreatorCachingConstants.GetByIdKey + request.Id.ToString(),
@@ -63,22 +64,24 @@ namespace MangaBaseAPI.Application.Creators.Queries.GetById
             return Result.SuccessNullError(result);
         }
 
-        private async Task<List<CreatorTitle>> GetCreatorPublications(Guid creatorId)
+        private async Task<List<CreatorTitle>> GetCreatorPublications(Guid creatorId, CancellationToken cancellationToken)
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             return await titleRepository.ToListAsync(
                 titleRepository.GetQueryableSet()
                     .Where(x => x.TitleAuthors.Any(t => t.AuthorId == creatorId) && !x.IsDeleted && !x.IsHidden)
-                    .Select(x => new CreatorTitle(x.Id, x.Name, x.CoverImageUrl)));
+                    .Select(x => new CreatorTitle(x.Id, x.Name, x.CoverImageUrl)),
+                cancellationToken);
         }
 
-        private async Task<List<CreatorTitle>> GetCreatorArtworks(Guid creatorId)
+        private async Task<List<CreatorTitle>> GetCreatorArtworks(Guid creatorId, CancellationToken cancellationToken)
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             return await titleRepository.ToListAsync(
                 titleRepository.GetQueryableSet()
                     .Where(x => x.TitleArtists.Any(t => t.ArtistId == creatorId) && !x.IsDeleted && !x.IsHidden)
-                    .Select(x => new CreatorTitle(x.Id, x.Name, x.CoverImageUrl)));
+                    .Select(x => new CreatorTitle(x.Id, x.Name, x.CoverImageUrl)),
+                cancellationToken);
         }
     }
 }

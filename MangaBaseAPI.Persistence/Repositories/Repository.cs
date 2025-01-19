@@ -25,9 +25,9 @@ namespace MangaBaseAPI.Persistence.Repositories
             _dbSet.RemoveRange(entities);
         }
 
-        public async Task BulkInsertAsync(IEnumerable<TEntity> entities)
+        public async Task BulkInsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
-            await _dbSet.AddRangeAsync(entities);
+            await _dbSet.AddRangeAsync(entities, cancellationToken);
         }
 
         public void BulkUpdate(IEnumerable<TEntity> entities)
@@ -40,9 +40,9 @@ namespace MangaBaseAPI.Persistence.Repositories
             _dbSet.Remove(entity);
         }
 
-        public async Task<T?> FirstOrDefaultAsync<T>(IQueryable<T> query)
+        public async Task<T?> FirstOrDefaultAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
         {
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
         public IQueryable<TEntity> GetQueryableSet()
@@ -50,17 +50,17 @@ namespace MangaBaseAPI.Persistence.Repositories
             return _dbSet;
         }
 
-        public async Task<T?> SingleOrDefaultAsync<T>(IQueryable<T> query)
+        public async Task<T?> SingleOrDefaultAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
         {
-            return await query.SingleOrDefaultAsync();
+            return await query.SingleOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<List<T>> ToListAsync<T>(IQueryable<T> query)
+        public async Task<List<T>> ToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default)
         {
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public void UpdateAsync(TEntity entity)
+        public void Update(TEntity entity)
         {
             _dbSet.Update(entity);
         }

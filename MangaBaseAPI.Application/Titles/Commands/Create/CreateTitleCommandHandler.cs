@@ -33,12 +33,12 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
         {
             // Check for title with same exact name
             var titleRepo = _unitOfWork.GetRepository<ITitleRepository>();
-            if (await titleRepo.IsTitleNameTaken(request.Name))
+            if (await titleRepo.IsTitleNameTaken(request.Name, cancellationToken))
             {
                 return Result.Failure<PostRequestResponse>(TitleErrors.Create_ExistedTitleName);
             }
 
-            var invalidAltNames = await FindInvalidAlternativeNames(request.AlternativeNames);
+            var invalidAltNames = await FindInvalidAlternativeNames(request.AlternativeNames, cancellationToken);
             if (invalidAltNames.Any())
             {
                 return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(
@@ -46,7 +46,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
                     invalidAltNames));
             }
 
-            var invalidGenres = await FindInvalidGenres(request.Genres);
+            var invalidGenres = await FindInvalidGenres(request.Genres, cancellationToken);
             if (invalidGenres.Any())
             {
                 return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(
@@ -167,7 +167,9 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             return result;
         }
 
-        private async Task<List<TitleAlternativeName>> FindInvalidAlternativeNames(List<TitleAlternativeName>? newAltNames)
+        private async Task<List<TitleAlternativeName>> FindInvalidAlternativeNames(
+            List<TitleAlternativeName>? newAltNames,
+            CancellationToken cancellationToken)
         {
             if (newAltNames == null || newAltNames.Count == 0)
             {
@@ -183,7 +185,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
                 var existingLanguagesIds = await languageRepository.GetQueryableSet()
                     .Select(x => x.Id)
                     .Where(x => newNameLanguageCodeIds.Contains(x))
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 return newAltNames.Where(x => !existingLanguagesIds.Contains(x.LanguageCodeId)).ToList();
             }
@@ -197,7 +199,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
             return newAltNames.Where(x => !cachedExistingLanguagesIds!.Contains(x.LanguageCodeId)).ToList();
         }
 
-        private async Task<List<int>> FindInvalidGenres(List<int>? newGenres)
+        private async Task<List<int>> FindInvalidGenres(List<int>? newGenres, CancellationToken cancellationToken)
         {
             if (newGenres == null || newGenres.Count == 0)
             {
@@ -208,7 +210,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
                 .GetQueryableSet()
                 .Select(x => x.Id)
                 .Where(x => newGenres.Contains(x))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return newGenres.Except(existingGenreIds).ToList();
         }

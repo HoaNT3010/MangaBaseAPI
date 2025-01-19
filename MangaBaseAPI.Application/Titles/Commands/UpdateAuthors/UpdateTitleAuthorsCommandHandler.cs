@@ -29,14 +29,15 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             var title = await titleRepository.FirstOrDefaultAsync(
-                titleRepository.ApplySpecification(new UpdateTitleAuthorsSpecification(request.Id)));
+                titleRepository.ApplySpecification(new UpdateTitleAuthorsSpecification(request.Id)),
+                cancellationToken);
 
             if (title == null)
             {
                 return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
-            var invalidAuthors = await FindInvalidNewAuthors(request.Authors);
+            var invalidAuthors = await FindInvalidNewAuthors(request.Authors, cancellationToken);
             if (invalidAuthors.Any())
             {
                 return Result.Failure(Error.Validation(
@@ -51,7 +52,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
                 title.TitleAuthors.Add(new TitleAuthor(title.Id, newAuthorId));
             }
 
-            titleRepository.UpdateAsync(title);
+            titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync();
             if (updateResult == 0)
             {
@@ -63,7 +64,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
             return Result.SuccessNullError();
         }
 
-        private async Task<List<Guid>> FindInvalidNewAuthors(List<Guid> newAuthors)
+        private async Task<List<Guid>> FindInvalidNewAuthors(List<Guid> newAuthors, CancellationToken cancellationToken)
         {
             if (newAuthors.Count == 0)
             {
@@ -74,7 +75,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAuthors
             var existingAuthors = await authorRepository.GetQueryableSet()
                 .Select(x => x.Id)
                 .Where(x => newAuthors.Contains(x))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return newAuthors.Except(existingAuthors).ToList();
         }

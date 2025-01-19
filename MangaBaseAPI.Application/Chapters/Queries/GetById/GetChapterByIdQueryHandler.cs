@@ -39,7 +39,8 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetById
                 var chapterRepository = _unitOfWork.GetRepository<IChapterRepository>();
 
                 var chapter = await chapterRepository.FirstOrDefaultAsync(
-                    chapterRepository.ApplySpecification(new GetChapterByIdSpecification(request.Id)));
+                    chapterRepository.ApplySpecification(new GetChapterByIdSpecification(request.Id)),
+                    cancellationToken);
 
                 if (chapter == null)
                 {

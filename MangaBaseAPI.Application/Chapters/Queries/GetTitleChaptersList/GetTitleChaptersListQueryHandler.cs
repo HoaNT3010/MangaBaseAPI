@@ -37,14 +37,16 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetTitleChaptersList
 
             if (string.IsNullOrEmpty(cachedData))
             {
-                var titleValidationError = await ValidateTitle(request.Id, _unitOfWork.GetRepository<ITitleRepository>());
+                var titleValidationError = await ValidateTitle(request.Id, _unitOfWork.GetRepository<ITitleRepository>(), cancellationToken);
                 if (titleValidationError != null)
                 {
                     return Result.Failure<List<GetTitleChaptersListResponse>>(titleValidationError);
                 }
 
                 var chapterRepository = _unitOfWork.GetRepository<IChapterRepository>();
-                var chapters = await chapterRepository.ToListAsync(chapterRepository.ApplySpecification(new GetTitleChaptersListSpecification(request.Id)));
+                var chapters = await chapterRepository.ToListAsync(
+                    chapterRepository.ApplySpecification(new GetTitleChaptersListSpecification(request.Id)),
+                    cancellationToken);
                 var result = _mapper.Map<List<GetTitleChaptersListResponse>>(chapters);
 
                 await _cache.SetStringAsync(
@@ -60,23 +62,24 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetTitleChaptersList
         }
 
         private async Task<Error?> ValidateTitle(Guid titleId,
-            ITitleRepository titleRepository)
+            ITitleRepository titleRepository,
+            CancellationToken cancellationToken)
         {
-            if (!await titleRepository.IsTitleExists(titleId))
+            if (!await titleRepository.IsTitleExists(titleId, cancellationToken))
             {
                 return Error.ErrorWithValue(
                     TitleErrors.General_TitleNotFound,
                     titleId);
             }
 
-            if (await titleRepository.IsTitleHidden(titleId))
+            if (await titleRepository.IsTitleHidden(titleId, cancellationToken))
             {
                 return Error.ErrorWithValue(
                     TitleErrors.General_TitleHidden,
                     titleId);
             }
 
-            if (await titleRepository.IsTitleDeleted(titleId))
+            if (await titleRepository.IsTitleDeleted(titleId, cancellationToken))
             {
                 return Error.ErrorWithValue(
                     TitleErrors.General_TitleDeleted,

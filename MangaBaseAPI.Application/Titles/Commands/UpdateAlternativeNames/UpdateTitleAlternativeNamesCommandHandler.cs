@@ -32,14 +32,15 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             var title = await titleRepository.FirstOrDefaultAsync(
-                titleRepository.ApplySpecification(new UpdateTitleAlternativeNamesSpecification(request.Id)));
+                titleRepository.ApplySpecification(new UpdateTitleAlternativeNamesSpecification(request.Id)),
+                cancellationToken);
 
             if (title == null)
             {
                 return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
-            var invalidAlternativeNames = await FindInvalidAlternativeNames(request.AlternativeNames);
+            var invalidAlternativeNames = await FindInvalidAlternativeNames(request.AlternativeNames, cancellationToken);
             if (invalidAlternativeNames.Any())
             {
                 return Result.Failure(Error.Validation(
@@ -54,7 +55,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
                 title.AlternativeNames.Add(new AlternativeName(title.Id, newName.Name, newName.LanguageCodeId));
             }
 
-            titleRepository.UpdateAsync(title);
+            titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync();
             if (updateResult == 0)
             {
@@ -67,7 +68,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
         }
 
         private async Task<List<TitleAlternativeName>> FindInvalidAlternativeNames(
-            List<TitleAlternativeName> newNames)
+            List<TitleAlternativeName> newNames,
+            CancellationToken cancellationToken)
         {
             if (newNames.Count == 0)
             {
@@ -83,7 +85,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
                 var existingLanguagesIds = await languageRepository.GetQueryableSet()
                     .Select(x => x.Id)
                     .Where(x => newNameLanguageCodeIds.Contains(x))
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
 
                 return newNames.Where(x => !existingLanguagesIds.Contains(x.LanguageCodeId)).ToList();
             }

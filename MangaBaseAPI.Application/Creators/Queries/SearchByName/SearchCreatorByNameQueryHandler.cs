@@ -32,7 +32,7 @@ namespace MangaBaseAPI.Application.Creators.Queries.SearchByName
                     Id = x.Id,
                     Name = x.Name
                 });
-            var creators = await PagedList<Creator>.CreateAsync(query, request.Page, request.PageSize);
+            var creators = await PagedList<Creator>.CreateAsync(query, request.Page, request.PageSize, cancellationToken);
 
             return Result.SuccessNullError(_mapper.Map<PagedList<SearchCreatorByNameResponse>>(creators));
         }

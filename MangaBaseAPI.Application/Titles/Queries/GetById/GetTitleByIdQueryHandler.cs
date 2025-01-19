@@ -47,7 +47,7 @@ namespace MangaBaseAPI.Application.Titles.Queries.GetById
                     .Include(x => x.TitleArtists)
                         .ThenInclude(x => x.Artist);
 
-                var title = await titleRepository.FirstOrDefaultAsync(query);
+                var title = await titleRepository.FirstOrDefaultAsync(query, cancellationToken);
 
                 if (title == null)
                 {

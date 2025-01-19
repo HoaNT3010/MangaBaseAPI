@@ -31,14 +31,15 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             var title = await titleRepository.FirstOrDefaultAsync(
-                titleRepository.ApplySpecification(new UpdateTitleGenresSpecification(request.Id)));
+                titleRepository.ApplySpecification(new UpdateTitleGenresSpecification(request.Id)),
+                cancellationToken);
 
             if (title == null)
             {
                 return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
-            var invalidGenres = await FindInvalidNewGenres(request.Genres);
+            var invalidGenres = await FindInvalidNewGenres(request.Genres, cancellationToken);
             if (invalidGenres.Any())
             {
                 return Result.Failure(
@@ -53,7 +54,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
                 title.TitleGenres.Add(new TitleGenre(title.Id, newGenreId));
             }
 
-            titleRepository.UpdateAsync(title);
+            titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync();
 
             if (updateResult == 0)
@@ -66,7 +67,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
             return Result.SuccessNullError();
         }
 
-        private async Task<List<int>> FindInvalidNewGenres(List<int> newGenres)
+        private async Task<List<int>> FindInvalidNewGenres(List<int> newGenres, CancellationToken cancellationToken)
         {
             if (newGenres.Count == 0)
             {
@@ -88,7 +89,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
             var existingGenres = await genresRepository.GetQueryableSet()
                 .Select(x => x.Id)
                 .Where(x => newGenres.Contains(x))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return newGenres.Except(existingGenres).ToList();
         }

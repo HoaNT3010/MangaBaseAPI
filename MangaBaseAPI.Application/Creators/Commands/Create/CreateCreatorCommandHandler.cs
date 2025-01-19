@@ -22,7 +22,7 @@ namespace MangaBaseAPI.Application.Creators.Commands.Create
         {
             var creatorRepository = _unitOfWork.GetRepository<ICreatorRepository>();
             // Check if creator with same name already exists
-            if (await creatorRepository.IsCreatorNameExist(request.Name))
+            if (await creatorRepository.IsCreatorNameExist(request.Name, cancellationToken))
             {
                 return Result.Failure(CreatorErrors.Create_ExistedCreatorName);
             }

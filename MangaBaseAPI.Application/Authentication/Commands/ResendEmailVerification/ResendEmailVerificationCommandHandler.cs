@@ -52,7 +52,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.ResendEmailVerificati
 
             var userTokenRepository = _unitOfWork.GetRepository<IUserTokenRepository>();
             var emailVerificationTokens = await userTokenRepository.ToListAsync(userTokenRepository.ApplySpecification(
-                new GetUserEmailVerificationTokenSpecification(user.Id)));
+                new GetUserEmailVerificationTokenSpecification(user.Id)), cancellationToken);
 
             var verificationToken = new UserToken()
             {

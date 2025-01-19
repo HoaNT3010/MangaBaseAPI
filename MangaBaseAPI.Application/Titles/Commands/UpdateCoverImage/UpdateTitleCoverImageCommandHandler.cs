@@ -39,7 +39,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
             // Retrieve title data
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             var title = await titleRepository.FirstOrDefaultAsync(
-                titleRepository.ApplySpecification(new UpdateTitleCoverImageSpecification(request.Id)));
+                titleRepository.ApplySpecification(new UpdateTitleCoverImageSpecification(request.Id)),
+                cancellationToken);
 
             if (title == null)
             {
@@ -83,7 +84,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
                 // Combine cover image path with Google Cloud Storage domain and bucket name to create full url
                 string fullFilePath = FilePathGenerator.GenerateFullFileUrl(_storageService.GetBucketName(), newCoverImagePath);
                 title.CoverImageUrl = fullFilePath;
-                titleRepository.UpdateAsync(title);
+                titleRepository.Update(title);
                 await _unitOfWork.SaveChangeAsync();
             }
             catch (Exception ex)

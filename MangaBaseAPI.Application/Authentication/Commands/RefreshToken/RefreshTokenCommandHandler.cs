@@ -37,7 +37,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.RefreshToken
             }
 
             var userTokenRepository = _unitOfWork.GetRepository<IUserTokenRepository>();
-            var userId = await userTokenRepository.GetUserIdByTokenValue(request.refreshToken);
+            var userId = await userTokenRepository.GetUserIdByTokenValue(request.refreshToken, cancellationToken);
             if (userId == default)
             {
                 return Result.Failure<RefreshTokenResponse>(RefreshTokenErrors.UserNotFound);

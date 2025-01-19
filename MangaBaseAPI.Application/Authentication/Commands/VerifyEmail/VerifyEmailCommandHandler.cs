@@ -48,7 +48,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.VerifyEmail
 
             var userTokenRepository = _unitOfWork.GetRepository<IUserTokenRepository>();
             var verificationTokens = await userTokenRepository.ToListAsync(userTokenRepository.ApplySpecification(
-                new GetUserEmailVerificationTokenSpecification(user.Id)));
+                new GetUserEmailVerificationTokenSpecification(user.Id)), cancellationToken);
 
             var token = verificationTokens.FirstOrDefault(x => x.Value == request.Token);
             if (token == null)

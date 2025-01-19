@@ -29,14 +29,15 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
             var title = await titleRepository.FirstOrDefaultAsync(
-                titleRepository.ApplySpecification(new UpdateTitleArtistsSpecification(request.Id)));
+                titleRepository.ApplySpecification(new UpdateTitleArtistsSpecification(request.Id)),
+                cancellationToken);
 
             if (title == null)
             {
                 return Result.Failure(TitleErrors.General_TitleNotFound);
             }
 
-            var invalidArtists = await FindInvalidNewArtists(request.Artists);
+            var invalidArtists = await FindInvalidNewArtists(request.Artists, cancellationToken);
             if (invalidArtists.Any())
             {
                 return Result.Failure(Error.Validation(
@@ -51,7 +52,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
                 title.TitleArtists.Add(new TitleArtist(title.Id, newArtistId));
             }
 
-            titleRepository.UpdateAsync(title);
+            titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync();
             if (updateResult == 0)
             {
@@ -63,7 +64,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
             return Result.SuccessNullError();
         }
 
-        private async Task<List<Guid>> FindInvalidNewArtists(List<Guid> newArtists)
+        private async Task<List<Guid>> FindInvalidNewArtists(List<Guid> newArtists, CancellationToken cancellationToken)
         {
             if (newArtists.Count == 0)
             {
@@ -74,7 +75,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
             var existingArtist = await artistRepository.GetQueryableSet()
                 .Select(x => x.Id)
                 .Where(x => newArtists.Contains(x))
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return newArtists.Except(existingArtist).ToList();
         }

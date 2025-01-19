@@ -31,7 +31,7 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetChaptersByTitleId
         {
             var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
 
-            if (!await titleRepository.IsTitleExists(request.Id))
+            if (!await titleRepository.IsTitleExists(request.Id, cancellationToken))
             {
                 return Result.Failure<PagedList<GetChaptersByTitleIdResponse>>(
                     Error.ErrorWithValue(
@@ -39,7 +39,7 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetChaptersByTitleId
                         request.Id));
             }
 
-            if (await titleRepository.IsTitleHidden(request.Id))
+            if (await titleRepository.IsTitleHidden(request.Id, cancellationToken))
             {
                 return Result.Failure<PagedList<GetChaptersByTitleIdResponse>>(
                     Error.ErrorWithValue(
@@ -47,7 +47,7 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetChaptersByTitleId
                         request.Id));
             }
 
-            if (await titleRepository.IsTitleDeleted(request.Id))
+            if (await titleRepository.IsTitleDeleted(request.Id, cancellationToken))
             {
                 return Result.Failure<PagedList<GetChaptersByTitleIdResponse>>(
                     Error.ErrorWithValue(
@@ -60,7 +60,7 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetChaptersByTitleId
                 request.Id,
                 request.DescendingIndexOrder));
 
-            var chapters = await PagedList<Chapter>.CreateAsync(query, request.Page, request.PageSize);
+            var chapters = await PagedList<Chapter>.CreateAsync(query, request.Page, request.PageSize, cancellationToken);
 
             return Result.SuccessNullError(_mapper.Map<PagedList<GetChaptersByTitleIdResponse>>(chapters));
         }

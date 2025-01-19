@@ -10,9 +10,9 @@ namespace MangaBaseAPI.Persistence.Repositories
         {
         }
 
-        public async Task<bool> IsCreatorNameExist(string creatorName)
+        public async Task<bool> IsCreatorNameExist(string creatorName, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AnyAsync(x => x.Name == creatorName);
+            return await _dbSet.AnyAsync(x => x.Name == creatorName, cancellationToken);
         }
     }
 }

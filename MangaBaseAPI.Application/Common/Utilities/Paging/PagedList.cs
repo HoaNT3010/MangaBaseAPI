@@ -31,13 +31,14 @@ namespace MangaBaseAPI.Application.Common.Utilities.Paging
         public static async Task<PagedList<T>> CreateAsync(
             IQueryable<T> query,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken = default)
         {
             int totalCount = await query.CountAsync();
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new(items, pageNumber, pageSize, totalCount);
         }

@@ -10,24 +10,24 @@ namespace MangaBaseAPI.Persistence.Repositories
         {
         }
 
-        public async Task<bool> IsTitleDeleted(Guid titleId)
+        public async Task<bool> IsTitleDeleted(Guid titleId, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AnyAsync(x => x.Id == titleId && x.IsDeleted);
+            return await _dbSet.AnyAsync(x => x.Id == titleId && x.IsDeleted, cancellationToken);
         }
 
-        public async Task<bool> IsTitleExists(Guid titleId)
+        public async Task<bool> IsTitleExists(Guid titleId, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AnyAsync(x => x.Id == titleId);
+            return await _dbSet.AnyAsync(x => x.Id == titleId, cancellationToken);
         }
 
-        public async Task<bool> IsTitleHidden(Guid titleId)
+        public async Task<bool> IsTitleHidden(Guid titleId, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AnyAsync(x => x.Id == titleId && x.IsHidden);
+            return await _dbSet.AnyAsync(x => x.Id == titleId && x.IsHidden, cancellationToken);
         }
 
-        public async Task<bool> IsTitleNameTaken(string titleName)
+        public async Task<bool> IsTitleNameTaken(string titleName, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AnyAsync(x => x.Name == titleName);
+            return await _dbSet.AnyAsync(x => x.Name == titleName, cancellationToken);
         }
     }
 }

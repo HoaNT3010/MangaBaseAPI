@@ -35,7 +35,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.RevokeToken
 
             bool removeTokenResult = await _unitOfWork
                 .GetRepository<IUserTokenRepository>()
-                .TryRemoveTokenByValueAsync(request.refreshToken);
+                .TryRemoveTokenByValueAsync(request.refreshToken, cancellationToken);
 
             if (!removeTokenResult)
             {

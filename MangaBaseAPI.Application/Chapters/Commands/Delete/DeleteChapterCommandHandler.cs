@@ -37,7 +37,8 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Delete
         {
             var chapterRepository = _unitOfWork.GetRepository<IChapterRepository>();
             var chapter = await chapterRepository.FirstOrDefaultAsync(
-                chapterRepository.ApplySpecification(new DeleteChapterSpecification(request.Id)));
+                chapterRepository.ApplySpecification(new DeleteChapterSpecification(request.Id)),
+                cancellationToken);
 
             if (chapter == null)
             {
@@ -55,7 +56,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Delete
             chapter.IsDeleted = true;
             try
             {
-                chapterRepository.UpdateAsync(chapter);
+                chapterRepository.Update(chapter);
                 await _unitOfWork.SaveChangeAsync();
             }
             catch (Exception ex)

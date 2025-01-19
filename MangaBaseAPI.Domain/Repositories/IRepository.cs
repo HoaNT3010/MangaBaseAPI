@@ -8,17 +8,17 @@ namespace MangaBaseAPI.Domain.Repositories
 
         Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 
-        void UpdateAsync(TEntity entity);
+        void Update(TEntity entity);
 
         void Delete(TEntity entity);
 
-        Task<T?> FirstOrDefaultAsync<T>(IQueryable<T> query);
+        Task<T?> FirstOrDefaultAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default);
 
-        Task<T?> SingleOrDefaultAsync<T>(IQueryable<T> query);
+        Task<T?> SingleOrDefaultAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default);
 
-        Task<List<T>> ToListAsync<T>(IQueryable<T> query);
+        Task<List<T>> ToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken = default);
 
-        Task BulkInsertAsync(IEnumerable<TEntity> entities);
+        Task BulkInsertAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
         void BulkUpdate(IEnumerable<TEntity> entities);
 

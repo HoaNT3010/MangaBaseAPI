@@ -10,16 +10,16 @@ namespace MangaBaseAPI.Persistence.Repositories
         {
         }
 
-        public async Task<Guid> GetUserIdByTokenValue(string tokenValue)
+        public async Task<Guid> GetUserIdByTokenValue(string tokenValue, CancellationToken cancellationToken = default)
         {
             return await _dbSet.Where(x => x.Value == tokenValue)
                 .Select(x => x.UserId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<bool> TryRemoveTokenByValueAsync(string tokenValue)
+        public async Task<bool> TryRemoveTokenByValueAsync(string tokenValue, CancellationToken cancellationToken = default)
         {
-            var userToken = await FirstOrDefaultAsync(_dbSet.Where(x => x.Value == tokenValue));
+            var userToken = await FirstOrDefaultAsync(_dbSet.Where(x => x.Value == tokenValue), cancellationToken);
             if (userToken == default)
             {
                 return false;
