@@ -2,6 +2,11 @@
 
 namespace MangaBaseAPI.Application.Common.Utilities.Email
 {
+    /// <summary>
+    /// All url generation methods is currently using the API domain.
+    /// This is a temporary solution for development environment.
+    /// In production, the domain should be the application/frontend domain.
+    /// </summary>
     public class EmailHelper
     {
         public const string ApplicationName = "MangaBase";
@@ -10,6 +15,7 @@ namespace MangaBaseAPI.Application.Common.Utilities.Email
         public const string EmailVerificationSubject = $"Verify your email for {ApplicationName}";
         const string EmailParameterName = "email";
         const string VerificationTokenParameterName = "token";
+        const string TokenParameterName = "token";
 
         public static string GenerateEmailVerificationBody(string displayName, string verificationUrl)
         {
@@ -20,7 +26,6 @@ namespace MangaBaseAPI.Application.Common.Utilities.Email
                 $"If you did not ask to verify this address, you can ignore this email. " +
                 $"Thanks, " +
                 $"{ApplicationName} team.";
-
         }
 
         /// <summary>
@@ -33,6 +38,27 @@ namespace MangaBaseAPI.Application.Common.Utilities.Email
         {
             string queryParams = $"?{EmailParameterName}={email}&{VerificationTokenParameterName}={token}";
             return $"{LocationConstants.ApplicationDevelopmentHttpsRoot}{LocationConstants.ApiV1BaseLocation}{LocationConstants.AuthenticationResource}email/verify{queryParams}";
+        }
+        #endregion
+
+        #region PasswordReset
+        public const string PasswordResetSubject = $"Reset your account's password for {ApplicationName}";
+
+        public static string GeneratePasswordResetEmailBody(string displayName, string passwordResetUrl)
+        {
+            return $"Hello {displayName}, " +
+                $"Follow this link to reset password for your account: " +
+                $"{passwordResetUrl} " +
+                $"This link will expire in 1 hour. " +
+                $"If you did not ask to reset your account password, you can ignore this email. " +
+                $"Thanks, " +
+                $"{ApplicationName} team.";
+        }
+
+        public static string GeneratePasswordResetUrl_Development(string email, string token)
+        {
+            string queryParams = $"?{EmailParameterName}={email}&{TokenParameterName}={token}";
+            return $"{LocationConstants.ApplicationDevelopmentHttpsRoot}{LocationConstants.ApiV1BaseLocation}{LocationConstants.AuthenticationResource}password/reset{queryParams}";
         }
         #endregion
     }
