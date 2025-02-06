@@ -85,7 +85,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
                 string fullFilePath = FilePathGenerator.GenerateFullFileUrl(_storageService.GetBucketName(), newCoverImagePath);
                 title.CoverImageUrl = fullFilePath;
                 titleRepository.Update(title);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
             }
             catch (Exception ex)
             {

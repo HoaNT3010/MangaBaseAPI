@@ -29,7 +29,7 @@ namespace MangaBaseAPI.Application.Creators.Commands.Create
 
             Creator newCreator = new Creator(request.Name, request.Biography);
             await creatorRepository.AddAsync(newCreator);
-            var result = await _unitOfWork.SaveChangeAsync();
+            var result = await _unitOfWork.SaveChangeAsync(cancellationToken);
 
             if (result <= 0)
             {

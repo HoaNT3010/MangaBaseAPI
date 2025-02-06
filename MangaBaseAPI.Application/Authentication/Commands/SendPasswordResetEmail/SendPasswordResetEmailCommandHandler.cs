@@ -65,7 +65,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.SendPasswordResetEmai
                 }
 
                 await userTokenRepository.AddAsync(resetToken, cancellationToken);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
             }
             catch (Exception ex)
             {

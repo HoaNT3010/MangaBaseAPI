@@ -57,7 +57,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Delete
             try
             {
                 chapterRepository.Update(chapter);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
             }
             catch (Exception ex)
             {

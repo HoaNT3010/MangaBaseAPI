@@ -42,7 +42,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.RevokeToken
                 return Result.Failure<RevokeTokenResponse>(RefreshTokenErrors.TokenEntryNotFound);
             }
 
-            int updateResult = await _unitOfWork.SaveChangeAsync();
+            int updateResult = await _unitOfWork.SaveChangeAsync(cancellationToken);
             if (updateResult <= 0)
             {
                 return Result.Failure<RevokeTokenResponse>(RefreshTokenErrors.UpdateRefreshTokenFailed);

@@ -16,14 +16,14 @@ namespace MangaBaseAPI.Persistence.Repositories
             _serviceProvider = serviceProvider;
         }
 
-        public async Task BeginTransactionAsync()
+        public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
-            await _context.Database.BeginTransactionAsync();
+            await _context.Database.BeginTransactionAsync(cancellationToken);
         }
 
-        public async Task CommitTransactionAsync()
+        public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
-            await _context.Database.CommitTransactionAsync();
+            await _context.Database.CommitTransactionAsync(cancellationToken);
         }
 
         public void Dispose()
@@ -36,14 +36,14 @@ namespace MangaBaseAPI.Persistence.Repositories
             return _serviceProvider.GetRequiredService<TRepository>();
         }
 
-        public async Task RollbackTransactionAsync()
+        public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
         {
-            await _context.Database.RollbackTransactionAsync();
+            await _context.Database.RollbackTransactionAsync(cancellationToken);
         }
 
-        public async Task<int> SaveChangeAsync()
+        public async Task<int> SaveChangeAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

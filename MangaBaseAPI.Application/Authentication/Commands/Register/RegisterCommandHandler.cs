@@ -65,27 +65,27 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
 
             try
             {
-                await _unitOfWork.BeginTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync(cancellationToken);
                 // Add user to db
                 var addUserResult = await _userManager.CreateAsync(newUser);
                 if (!addUserResult.Succeeded)
                 {
-                    await _unitOfWork.RollbackTransactionAsync();
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                     return Result.Failure(RegisterErrors.CreateUserFailed);
                 }
                 // Add user's role to db
                 var addUserRoleResult = await _userManager.AddToRoleAsync(newUser, ApplicationRoles.Member);
                 if (!addUserRoleResult.Succeeded)
                 {
-                    await _unitOfWork.RollbackTransactionAsync();
+                    await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                     return Result.Failure(RegisterErrors.AssignUserRoleFailed);
                 }
 
-                await _unitOfWork.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
             }
             catch (Exception)
             {
-                await _unitOfWork.RollbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 return Result.Failure(RegisterErrors.UnexpectedError);
             }
 
@@ -114,7 +114,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
             try
             {
                 await userTokenRepository.AddAsync(verificationToken, cancellationToken);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
             }
             catch (Exception ex)
             {

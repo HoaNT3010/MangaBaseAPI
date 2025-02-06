@@ -92,7 +92,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
 
             // Save title to database
             await titleRepo.AddAsync(newTitle, cancellationToken);
-            var result = await _unitOfWork.SaveChangeAsync();
+            var result = await _unitOfWork.SaveChangeAsync(cancellationToken);
             if (result == 0)
             {
                 return Result.Failure<PostRequestResponse>(TitleErrors.Create_CreateTitleFailed);

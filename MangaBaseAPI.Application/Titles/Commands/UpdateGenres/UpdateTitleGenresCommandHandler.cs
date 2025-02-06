@@ -55,7 +55,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
             }
 
             titleRepository.Update(title);
-            var updateResult = await _unitOfWork.SaveChangeAsync();
+            var updateResult = await _unitOfWork.SaveChangeAsync(cancellationToken);
 
             if (updateResult == 0)
             {

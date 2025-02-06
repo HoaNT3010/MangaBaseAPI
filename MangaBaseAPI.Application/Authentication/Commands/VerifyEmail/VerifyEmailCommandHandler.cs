@@ -65,18 +65,18 @@ namespace MangaBaseAPI.Application.Authentication.Commands.VerifyEmail
             }
             try
             {
-                await _unitOfWork.BeginTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
                 user.EmailConfirmed = true;
                 await _userManager.UpdateAsync(user);
                 userTokenRepository.BulkDelete(verificationTokens);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
 
-                await _unitOfWork.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
             }
             catch (Exception ex)
             {
-                await _unitOfWork.RollbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 _logger.LogError("Failed to verify user's email address: {Message}", ex.Message);
                 return Result.Failure<string>(EmailVerificationErrors.Verify_VerifyEmailFailed);
             }

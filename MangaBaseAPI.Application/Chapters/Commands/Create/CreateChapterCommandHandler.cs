@@ -83,7 +83,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             try
             {
                 await chapterRepository.AddAsync(newChapter);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
             }
             catch (Exception ex)
             {

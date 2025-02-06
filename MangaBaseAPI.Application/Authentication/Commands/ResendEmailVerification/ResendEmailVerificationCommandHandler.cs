@@ -71,7 +71,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.ResendEmailVerificati
                 }
 
                 await userTokenRepository.AddAsync(verificationToken, cancellationToken);
-                await _unitOfWork.SaveChangeAsync();
+                await _unitOfWork.SaveChangeAsync(cancellationToken);
             }
             catch (Exception ex)
             {
