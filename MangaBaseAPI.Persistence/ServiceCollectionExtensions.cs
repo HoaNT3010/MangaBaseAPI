@@ -62,6 +62,7 @@ namespace MangaBaseAPI.Persistence
             services.AddScoped<ITitleGenreRepository, TitleGenreRepository>();
             services.AddScoped<ITitleRatingRepository, TitleRatingRepository>();
             services.AddScoped<ITitleRepository, TitleRepository>();
+            services.AddScoped<IPasswordHistoryRepository, PasswordHistoryRepository>();
 
             return services;
         }
