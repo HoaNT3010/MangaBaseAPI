@@ -1,5 +1,6 @@
 ﻿using Carter;
 using MangaBaseAPI.Application.Authentication.Commands.VerifyEmail;
+using MangaBaseAPI.Contracts.Authentication.VerifyEmail;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("auth/email/verify", HandleVerifyEmail)
+            app.MapPost("auth/email/verify", HandleVerifyEmail)
                 .WithTags("Authentication")
                 .WithOpenApi(operation => new(operation)
                 {
@@ -22,12 +23,11 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
         }
 
         private static async Task<IResult> HandleVerifyEmail(
-            [FromQuery] string email,
-            [FromQuery] string token,
+            [FromBody] VerifyEmailRequest request,
             ISender sender,
             CancellationToken cancellationToken)
         {
-            var command = new VerifyEmailCommand(email, token);
+            var command = new VerifyEmailCommand(request.Email, request.Token);
 
             var result = await sender.Send(command, cancellationToken);
 
