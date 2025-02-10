@@ -89,6 +89,11 @@ namespace MangaBaseAPI.Application.Authentication.Commands.VerifyPasswordReset
                 };
                 user.PasswordHash = newPasswordHash;
                 await passwordHistoryRepository.AddAsync(newPasswordHistory, cancellationToken);
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    throw new InvalidOperationException($"Unexpected error(s) occurred when trying to save user's account after password reset: {string.Join(", ", updateResult.Errors)}");
+                }
                 userTokenRepository.BulkDelete(resetTokens);
 
                 await _unitOfWork.SaveChangeAsync(cancellationToken);
