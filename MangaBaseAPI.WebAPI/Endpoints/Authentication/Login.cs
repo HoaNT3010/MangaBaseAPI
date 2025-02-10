@@ -1,5 +1,5 @@
 ﻿using Carter;
-using MangaBaseAPI.Application.Authentication.Queries.Login;
+using MangaBaseAPI.Application.Authentication.Commands.Login;
 using MangaBaseAPI.Contracts.Authentication.Login;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;
@@ -25,7 +25,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
             ISender sender,
             CancellationToken cancellationToken)
         {
-            var query = new LoginQuery(loginRequest.Email, loginRequest.Password);
+            var query = new LoginCommand(loginRequest.Email, loginRequest.Password);
 
             var result = await sender.Send(query, cancellationToken);
 

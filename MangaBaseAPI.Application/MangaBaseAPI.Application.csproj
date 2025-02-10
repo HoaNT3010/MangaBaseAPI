@@ -20,4 +20,8 @@
     <ProjectReference Include="..\MangaBaseAPI.Domain\MangaBaseAPI.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authentication\Queries\" />
+  </ItemGroup>
+
 </Project>

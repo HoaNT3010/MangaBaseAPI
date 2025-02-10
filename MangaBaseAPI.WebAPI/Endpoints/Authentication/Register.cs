@@ -1,6 +1,5 @@
 ﻿using Carter;
 using MangaBaseAPI.Application.Authentication.Commands.Register;
-using MangaBaseAPI.Application.Authentication.Queries.Login;
 using MangaBaseAPI.Contracts.Authentication.Register;
 using MangaBaseAPI.WebAPI.Common;
 using MediatR;

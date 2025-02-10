@@ -2,9 +2,9 @@
 using MangaBaseAPI.Domain.Abstractions;
 using MediatR;
 
-namespace MangaBaseAPI.Application.Authentication.Queries.Login
+namespace MangaBaseAPI.Application.Authentication.Commands.Login
 {
-    public record LoginQuery(
+    public record LoginCommand(
         string Email,
         string Password) : IRequest<Result<LoginResponse>>;
 }

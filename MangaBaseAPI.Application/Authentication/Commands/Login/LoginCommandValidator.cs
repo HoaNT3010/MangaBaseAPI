@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace MangaBaseAPI.Application.Authentication.Queries.Login
+namespace MangaBaseAPI.Application.Authentication.Commands.Login
 {
-    public class LoginQueryValidator : AbstractValidator<LoginQuery>
+    public class LoginCommandValidator : AbstractValidator<LoginCommand>
     {
-        public LoginQueryValidator()
+        public LoginCommandValidator()
         {
             ClassLevelCascadeMode = CascadeMode.Stop;
 

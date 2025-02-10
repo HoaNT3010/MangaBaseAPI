@@ -8,15 +8,15 @@ using MangaBaseAPI.Domain.Errors.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace MangaBaseAPI.Application.Authentication.Queries.Login
+namespace MangaBaseAPI.Application.Authentication.Commands.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, Result<LoginResponse>>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<LoginResponse>>
     {
         private readonly UserManager<User> _userManager;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtTokenProvider _jwtTokenProvider;
 
-        public LoginQueryHandler(
+        public LoginCommandHandler(
             UserManager<User> userManager,
             IPasswordHasher passwordHasher,
             IJwtTokenProvider jwtTokenProvider)
@@ -26,7 +26,7 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
             _jwtTokenProvider = jwtTokenProvider;
         }
 
-        public async Task<Result<LoginResponse>> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null)
@@ -47,7 +47,7 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
 
             var tokenUpdate = await _userManager.SetAuthenticationTokenAsync(user, UserTokenConstants.MangaBaseLoginProvider, UserTokenConstants.JwtRefreshTokenName, refreshToken);
 
-            if (!tokenUpdate.Succeeded) 
+            if (!tokenUpdate.Succeeded)
             {
                 return Result.Failure<LoginResponse>(LoginErrors.UpdateRefreshTokenFailed);
             }
