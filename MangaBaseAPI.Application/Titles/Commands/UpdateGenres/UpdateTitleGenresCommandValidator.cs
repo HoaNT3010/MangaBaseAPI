@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
     {
         public UpdateTitleGenresCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Genres)
                 .NotNull().WithMessage("Title's genres cannot be null")
                 .Must(x => x == null || x.Distinct().Count() == x.Count).WithMessage("Title's genres cannot contains duplicate(s)")

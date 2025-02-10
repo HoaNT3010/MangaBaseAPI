@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Authentication.Commands.ResendEmailVerificati
     {
         public ResendEmailVerificationCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Email)
                 .NotNull().WithMessage("Email address cannot be null")
                 .NotEmpty().WithMessage("Email address cannot be empty")

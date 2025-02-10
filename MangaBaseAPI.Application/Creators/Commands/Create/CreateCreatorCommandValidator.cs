@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Creators.Commands.Create
     {
         public CreateCreatorCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Creator name cannot be empty")
                 .MaximumLength(100).WithMessage("Creator name cannot exceed 100 characters");

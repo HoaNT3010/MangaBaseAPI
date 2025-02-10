@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
     {
         public RegisterCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.UserName)
                 .NotEmpty().WithMessage("User name cannot be empty")
                 .MinimumLength(6).WithMessage("User name must be at least 6 characters")

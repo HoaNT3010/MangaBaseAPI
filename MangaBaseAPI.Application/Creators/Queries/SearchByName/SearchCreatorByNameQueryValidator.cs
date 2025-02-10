@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Creators.Queries.SearchByName
     {
         public SearchCreatorByNameQueryValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Keyword)
                 .NotNull().WithMessage("Keyword is required")
                 .MaximumLength(100).WithMessage("Keyword cannot exceed 100 characters");

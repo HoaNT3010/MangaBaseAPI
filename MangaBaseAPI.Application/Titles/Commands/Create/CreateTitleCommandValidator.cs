@@ -7,6 +7,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.Create
     {
         public CreateTitleCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Title name cannot be empty")
                 .MaximumLength(250).WithMessage("Title name cannot exceed 250 characters");

@@ -7,6 +7,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
     {
         public UpdateTitleCoverImageCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.File)
                 .NotNull().WithMessage("Cover image must be included")
                 .Must(x => x == null || ImageValidator.IsImageExtensionValid(x.FileName)).WithMessage("Invalid file extension. Only '.png', '.jpg', '.webp' file extensions are supported")

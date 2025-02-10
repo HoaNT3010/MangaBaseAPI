@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Authentication.Queries.Login
     {
         public LoginQueryValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email address cannot be empty")
                 .EmailAddress().WithMessage("Email address is not valid");

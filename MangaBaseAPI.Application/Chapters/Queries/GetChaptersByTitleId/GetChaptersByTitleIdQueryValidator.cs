@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Chapters.Queries.GetChaptersByTitleId
     {
         public GetChaptersByTitleIdQueryValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Page)
                 .GreaterThan(0).WithMessage("Page number must be greater than 0");
 

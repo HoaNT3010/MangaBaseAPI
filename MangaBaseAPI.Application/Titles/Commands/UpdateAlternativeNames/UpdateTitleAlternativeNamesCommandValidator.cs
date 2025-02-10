@@ -8,6 +8,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
     {
         public UpdateTitleAlternativeNamesCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.AlternativeNames)
                 .NotNull().WithMessage("Title's alternative names cannot be null")
                 .Must(x => x == null || x.Count <= 50).WithMessage("Title cannot have more than 10 alternative names")

@@ -7,6 +7,8 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
     {
         public CreateChapterCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Name)
                 .NotNull().WithMessage("Chapter's name must be included")
                 .NotEmpty().WithMessage("Chapter's name cannot be empty")

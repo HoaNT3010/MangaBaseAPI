@@ -6,6 +6,8 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
     {
         public UpdateTitleArtistsCommandValidator()
         {
+            ClassLevelCascadeMode = CascadeMode.Stop;
+
             RuleFor(x => x.Artists)
                 .NotNull().WithMessage("Title's artists cannot be null")
                 .Must(x => x.Distinct().Count() == x.Count).WithMessage("Title's artists cannot contains duplicate(s)")
