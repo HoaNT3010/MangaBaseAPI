@@ -1,7 +1,7 @@
 ﻿using MangaBaseAPI.Domain.Abstractions.Specification;
 using MangaBaseAPI.Domain.Entities;
 
-namespace MangaBaseAPI.Application.Authentication.Common.Specifications
+namespace MangaBaseAPI.Application.Common.Specifications
 {
     internal class GetUserAllPasswordHistoriesSpecification : Specification<PasswordHistory>
     {

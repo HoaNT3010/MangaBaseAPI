@@ -1,4 +1,4 @@
-﻿using MangaBaseAPI.Application.Authentication.Common.Specifications;
+﻿using MangaBaseAPI.Application.Common.Specifications;
 using MangaBaseAPI.CrossCuttingConcerns.Identity;
 using MangaBaseAPI.Domain.Abstractions;
 using MangaBaseAPI.Domain.Entities;
