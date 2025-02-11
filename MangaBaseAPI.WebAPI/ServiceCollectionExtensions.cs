@@ -2,7 +2,9 @@
 using Carter;
 using MangaBaseAPI.WebAPI.Common;
 using MangaBaseAPI.WebAPI.Middlewares;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace MangaBaseAPI.WebAPI
@@ -44,7 +46,10 @@ namespace MangaBaseAPI.WebAPI
             {
                 options.CustomizeProblemDetails = (context) =>
                 {
-                    context.ProblemDetails.Extensions["traceId"] = context.HttpContext.TraceIdentifier;
+                    context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+                    context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+                    Activity? activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+                    context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
                 };
             });
 

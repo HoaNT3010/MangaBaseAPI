@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace MangaBaseAPI.WebAPI.Common
 {
@@ -19,10 +21,10 @@ namespace MangaBaseAPI.WebAPI.Common
         {
             _logger.LogError(exception, "Unexpected exception occurred: {Message}", exception.Message);
 
-            var extension = new Dictionary<string, object?>()
-            {
-                { "traceId", httpContext.TraceIdentifier }
-            };
+            var extension = new Dictionary<string, object?>();
+            extension.TryAdd("requestId", httpContext.TraceIdentifier);
+            Activity? activity = httpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+            extension.TryAdd("traceId", activity?.Id);
 
             var problemDetails = new ProblemDetails
             {
