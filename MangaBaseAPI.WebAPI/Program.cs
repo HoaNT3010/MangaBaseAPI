@@ -10,7 +10,6 @@ using MangaBaseAPI.Infrastructure.Storage;
 using MangaBaseAPI.Infrastructure.Authorization;
 using MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler;
 using MangaBaseAPI.Infrastructure.Email.Gmail;
-using MangaBaseAPI.CrossCuttingConcerns.Email.Gmail;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

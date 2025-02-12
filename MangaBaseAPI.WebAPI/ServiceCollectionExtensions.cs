@@ -4,6 +4,7 @@ using MangaBaseAPI.WebAPI.Common;
 using MangaBaseAPI.WebAPI.Middlewares;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
@@ -35,6 +36,7 @@ namespace MangaBaseAPI.WebAPI
             });
 
             services.AddCustomMiddlewares();
+            services.ConfigureSerilog();
 
             return services;
         }
@@ -76,6 +78,16 @@ namespace MangaBaseAPI.WebAPI
         private static IServiceCollection AddCustomMiddlewares(this IServiceCollection services)
         {
             services.AddTransient<UserClaimsMiddleware>();
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureSerilog(this IServiceCollection services)
+        {
+            services.AddLogging(builder =>
+            {
+                builder.AddSerilog();
+            });
 
             return services;
         }
