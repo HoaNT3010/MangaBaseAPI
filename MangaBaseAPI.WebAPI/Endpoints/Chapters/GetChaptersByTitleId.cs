@@ -25,6 +25,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Chapters
         private static async Task<IResult> HandleGetChaptersByTitleId(
             [FromRoute] Guid id,
             GetChaptersByTitleIdRequest request,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -35,7 +36,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Chapters
 
             var result = await sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Creators
 
         private static async Task<IResult> HandleCreateCreator(
             CreateCreatorRequest request,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -31,7 +32,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Creators
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

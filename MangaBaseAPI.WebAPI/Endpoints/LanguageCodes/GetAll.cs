@@ -20,6 +20,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.LanguageCodes
         }
 
         private static async Task<IResult> HandleGetAllLanguageCodes(
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -27,7 +28,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.LanguageCodes
 
             var result = await sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

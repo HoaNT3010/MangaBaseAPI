@@ -22,6 +22,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Creators
 
         private static async Task<IResult> HandleGetCreatorById(
             Guid id,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -29,7 +30,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Creators
 
             var result = await sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Chapters
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.IsSuccess ? Results.Created(result.Value.Location, result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Created(result.Value.Location, result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
 
         private static async Task<IResult> HandleLogin(
             LoginRequest loginRequest,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -29,7 +30,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
 
             var result = await sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

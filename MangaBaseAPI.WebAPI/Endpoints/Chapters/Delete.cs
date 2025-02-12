@@ -24,6 +24,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Chapters
 
         private static async Task<IResult> HandleDeleteChapter(
             [FromRoute] Guid id,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -31,7 +32,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Chapters
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.IsSuccess ? Results.NoContent() : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.NoContent() : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Users
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.IsSuccess ? Results.NoContent() : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.NoContent() : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

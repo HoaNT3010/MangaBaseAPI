@@ -24,6 +24,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
 
         private static async Task<IResult> HandleVerifyPasswordReset(
             [FromBody] VerifyPasswordResetRequest request,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -35,7 +36,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Authentication
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

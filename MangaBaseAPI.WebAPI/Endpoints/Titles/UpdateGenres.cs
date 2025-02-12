@@ -25,6 +25,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Titles
         private static async Task<IResult> HandleUpdateGenres(
             Guid id,
             UpdateTitleGenresRequest request,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -32,7 +33,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Titles
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.IsSuccess ? Results.NoContent() : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.NoContent() : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

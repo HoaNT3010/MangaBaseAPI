@@ -20,6 +20,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Genres
         }
 
         private static async Task<IResult> HandleGetAllGenres(
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -27,7 +28,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Genres
 
             var result = await sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }

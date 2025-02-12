@@ -24,6 +24,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Titles
 
         private static async Task<IResult> HandleGetById(
             Guid id,
+            HttpContext context,
             ISender sender,
             CancellationToken cancellationToken)
         {
@@ -31,7 +32,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Titles
 
             var result = await sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result);
+            return result.IsSuccess ? Results.Ok(result) : ResultExtensions.HandleFailure(result, context);
         }
     }
 }
