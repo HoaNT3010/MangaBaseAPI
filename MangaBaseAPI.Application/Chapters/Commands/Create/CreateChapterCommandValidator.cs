@@ -21,7 +21,8 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             RuleFor(x => x.Index)
                 .GreaterThan(0).WithMessage("Chapter's index must be greater than 0")
                 .LessThanOrEqualTo(9999).WithMessage("Chapter's index cannot be greater than 9999")
-                .Must(x => IsWholeNumber(x) || HasOneDecimalPlace(x));
+                .Must(IsChapterIndexValid)
+                .WithMessage("Chapter's index must be a whole number or have only one decimal place");
 
             RuleFor(x => x.ChapterImages)
                 .Must(x => x.Count() > 0).WithMessage("Chapter's must contain at least 1 image")
@@ -35,15 +36,9 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
                 .Must(x => x == null || (int.TryParse(Path.GetFileNameWithoutExtension(x.FileName), out int result) && result > 0)).WithMessage("Image name must be an integer number greater than 0");
         }
 
-        static bool IsWholeNumber(float number)
+        static bool IsChapterIndexValid(float index)
         {
-            return number == Math.Floor(number);
-        }
-
-        static bool HasOneDecimalPlace(float number)
-        {
-            float decimalPart = number - (float)Math.Floor(number);
-            return Math.Abs(decimalPart * 10 - Math.Floor(decimalPart * 10)) < 1e-6;
+            return index % 1 == 0 || (index * 10) % 1 == 0;
         }
     }
 }
