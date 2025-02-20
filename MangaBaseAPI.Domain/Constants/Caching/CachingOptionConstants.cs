@@ -62,5 +62,13 @@ namespace MangaBaseAPI.Domain.Constants.Caching
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(365),
         };
+
+        /// <summary>
+        /// Caching option for always changing resource, with Absolute expiration of <b>30 minutes</b> no Sliding expiration.
+        /// </summary>
+        public static readonly DistributedCacheEntryOptions UltraShortCachingOption = new DistributedCacheEntryOptions()
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30),
+        };
     }
 }
