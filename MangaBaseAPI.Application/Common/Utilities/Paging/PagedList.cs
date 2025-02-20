@@ -22,7 +22,7 @@ namespace MangaBaseAPI.Application.Common.Utilities.Paging
 
         public int PageSize { get; }
 
-        public int TotalCount { get; }
+        public int TotalCount { get; set; }
 
         public bool HasNextPage => PageNumber * PageSize < TotalCount;
 
@@ -34,12 +34,34 @@ namespace MangaBaseAPI.Application.Common.Utilities.Paging
             int pageSize,
             CancellationToken cancellationToken = default)
         {
-            int totalCount = await query.CountAsync();
+            int totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
+            return new(items, pageNumber, pageSize, totalCount);
+        }
+
+        public static PagedList<T> Create(
+            IQueryable<T> query,
+            int pageNumber,
+            int pageSize)
+        {
+            int totalCount = query.Count();
+            var items = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            return new(items, pageNumber, pageSize, totalCount);
+        }
+
+        public static PagedList<T> Create(
+            List<T> items,
+            int pageNumber,
+            int pageSize,
+            int totalCount)
+        {
             return new(items, pageNumber, pageSize, totalCount);
         }
     }
