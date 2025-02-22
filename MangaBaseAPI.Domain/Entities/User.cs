@@ -56,5 +56,10 @@ namespace MangaBaseAPI.Domain.Entities
         {
             ModifiedDateTime = DateTimeOffset.Now;
         }
+
+        public bool IsUserCurrentlyLockedOut()
+        {
+            return LockoutEnabled && LockoutEnd.HasValue && LockoutEnd.Value.ToUniversalTime() > DateTimeOffset.UtcNow.ToUniversalTime();
+        }
     }
 }
