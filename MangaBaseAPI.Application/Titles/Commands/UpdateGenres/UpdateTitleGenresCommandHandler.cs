@@ -53,7 +53,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateGenres
             {
                 title.TitleGenres.Add(new TitleGenre(title.Id, newGenreId));
             }
-
+            title.SetModifyDateTime();
             titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync(cancellationToken);
 

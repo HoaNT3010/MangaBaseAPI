@@ -1,4 +1,5 @@
-﻿using MangaBaseAPI.Application.Common.Utilities.Storage;
+﻿using System.Globalization;
+using MangaBaseAPI.Application.Common.Utilities.Storage;
 using MangaBaseAPI.Contracts.Common.Response;
 using MangaBaseAPI.CrossCuttingConcerns.Storage.GoogleCloudStorage;
 using MangaBaseAPI.Domain.Abstractions;
@@ -35,11 +36,12 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             CreateChapterCommand request,
             CancellationToken cancellationToken)
         {
-            var isTitleExist = await _unitOfWork.GetRepository<ITitleRepository>()
+            var titleRepository = _unitOfWork.GetRepository<ITitleRepository>();
+            var title = await titleRepository
                 .GetQueryableSet()
-                .AnyAsync(x => x.Id == request.TitleId, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == request.TitleId, cancellationToken);
 
-            if (!isTitleExist)
+            if (title == null)
             {
                 return Result.Failure<PostRequestResponse>(Error.ErrorWithValue(TitleErrors.General_TitleNotFound, request.TitleId));
             }
@@ -82,11 +84,16 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
 
             try
             {
-                await chapterRepository.AddAsync(newChapter);
+                await _unitOfWork.BeginTransactionAsync(cancellationToken);
+                await chapterRepository.AddAsync(newChapter, cancellationToken);
+                title.SetModifyDateTime();
+                titleRepository.Update(title);
                 await _unitOfWork.SaveChangeAsync(cancellationToken);
+                await _unitOfWork.CommitTransactionAsync(cancellationToken);
             }
             catch (Exception ex)
             {
+                await _unitOfWork.RollbackTransactionAsync(cancellationToken);
                 _logger.LogError("Failed to create new chapter: {Message}", ex.Message);
                 await DeleteChapterImages(chapterImageNames, successfulUpload);
                 return Result.Failure<PostRequestResponse>(ChapterErrors.Create_CreateChapterFailed);
@@ -102,7 +109,7 @@ namespace MangaBaseAPI.Application.Chapters.Commands.Create
             for (int i = 0; i < images.Count; i++)
             {
                 result.Add(FilePathGenerator.GenerateChapterImagePath(titleId.ToString(),
-                    chapterIndex.ToString(),
+                    chapterIndex.ToString(CultureInfo.InvariantCulture),
                     (i + 1).ToString() + Path.GetExtension(images[i].FileName)));
             }
 

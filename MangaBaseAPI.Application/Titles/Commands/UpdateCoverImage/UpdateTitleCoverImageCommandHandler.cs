@@ -84,6 +84,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateCoverImage
                 // Combine cover image path with Google Cloud Storage domain and bucket name to create full url
                 string fullFilePath = FilePathGenerator.GenerateFullFileUrl(_storageService.GetBucketName(), newCoverImagePath);
                 title.CoverImageUrl = fullFilePath;
+                title.SetModifyDateTime();
                 titleRepository.Update(title);
                 await _unitOfWork.SaveChangeAsync(cancellationToken);
             }

@@ -54,7 +54,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateAlternativeNames
             {
                 title.AlternativeNames.Add(new AlternativeName(title.Id, newName.Name, newName.LanguageCodeId));
             }
-
+            title.SetModifyDateTime();
             titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync(cancellationToken);
             if (updateResult == 0)

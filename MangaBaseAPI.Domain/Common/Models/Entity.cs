@@ -13,7 +13,7 @@ namespace MangaBaseAPI.Domain.Common.Models
 
         public virtual void SetModifyDateTime()
         {
-            ModifiedDateTime = DateTimeOffset.UtcNow;
+            ModifiedDateTime = DateTimeOffset.Now;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace MangaBaseAPI.Application.Titles.Commands.UpdateArtists
             {
                 title.TitleArtists.Add(new TitleArtist(title.Id, newArtistId));
             }
-
+            title.SetModifyDateTime();
             titleRepository.Update(title);
             var updateResult = await _unitOfWork.SaveChangeAsync(cancellationToken);
             if (updateResult == 0)
