@@ -52,5 +52,10 @@ namespace MangaBaseAPI.Domain.Entities
                 }
             };
         }
+
+        public void SetUserModifyDateTime()
+        {
+            ModifiedDateTime = DateTimeOffset.UtcNow;
+        }
     }
 }
