@@ -31,8 +31,12 @@ namespace MangaBaseAPI.Application.Users.Commands.UpdateFullName
                     user.LockoutEnd));
             }
 
-            user.FirstName = request.FirstName;
-            user.LastName = request.LastName;
+            if (user.FirstName == request.FirstName.Trim() && user.LastName == request.LastName.Trim())
+            {
+                return Result.Failure(UserErrors.Update_UnchangedFullName);
+            }
+            user.FirstName = request.FirstName.Trim();
+            user.LastName = request.LastName.Trim();
             user.SetModifyDateTime();
             try
             {
