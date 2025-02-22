@@ -28,7 +28,6 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                 .IsRowVersion();
 
             builder.Property(x => x.ModifiedDateTime)
-                .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("SYSDATETIMEOFFSET()");
         }
     }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MangaBaseAPI.Persistence.Migrations
 {
     [DbContext(typeof(MangaBaseDbContext))]
-    [Migration("20250222030133_UpdateModifiedDateTimeAndIndexes")]
+    [Migration("20250222072857_UpdateModifiedDateTimeAndIndexes")]
     partial class UpdateModifiedDateTimeAndIndexes
     {
         /// <inheritdoc />
@@ -71,7 +71,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("ModifiedDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
@@ -145,7 +145,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<DateTimeOffset?>("ModifiedDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
@@ -217,7 +217,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
                     b.Property<DateTimeOffset?>("ModifiedDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
@@ -388,7 +388,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("ModifiedDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
@@ -533,7 +533,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset?>("ModifiedDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetimeoffset")
                         .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
@@ -595,7 +595,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "abcce63e-fb2d-40e9-a10a-ca1d0bdcc296",
+                            ConcurrencyStamp = "89900295-fc1c-43b2-b370-1a32e2e9552f",
                             CreatedDateTime = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "hoa41300@gmail.com",
                             EmailConfirmed = false,

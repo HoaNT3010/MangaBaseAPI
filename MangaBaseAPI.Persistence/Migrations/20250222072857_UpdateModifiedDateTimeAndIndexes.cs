@@ -66,7 +66,7 @@ namespace MangaBaseAPI.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: new Guid("11111111-1111-1111-1111-111111111111"),
                 column: "ConcurrencyStamp",
-                value: "abcce63e-fb2d-40e9-a10a-ca1d0bdcc296");
+                value: "89900295-fc1c-43b2-b370-1a32e2e9552f");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Titles_PublishedDate",
@@ -171,18 +171,11 @@ namespace MangaBaseAPI.Persistence.Migrations
                 oldDefaultValueSql: "SYSDATETIMEOFFSET()");
 
             migrationBuilder.UpdateData(
-                table: "PasswordHistories",
-                keyColumn: "Id",
-                keyValue: new Guid("22222222-1111-1111-1111-111111111111"),
-                column: "ModifiedDateTime",
-                value: null);
-
-            migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: new Guid("11111111-1111-1111-1111-111111111111"),
-                columns: new[] { "ConcurrencyStamp", "ModifiedDateTime" },
-                values: new object[] { "414cf2b9-5497-4b72-a5d4-893489bea542", null });
+                column: "ConcurrencyStamp",
+                value: "414cf2b9-5497-4b72-a5d4-893489bea542");
         }
     }
 }

@@ -20,7 +20,6 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                 .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
             builder.Property(x => x.ModifiedDateTime)
-                .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
             builder.HasOne(x => x.Uploader)
