@@ -5,5 +5,7 @@
         byte[] RowVersion { get; set; }
         DateTimeOffset CreatedDateTime { get; set; }
         DateTimeOffset? ModifiedDateTime { get; set; }
+
+        public void SetModifyDateTime();
     }
 }

@@ -10,5 +10,10 @@ namespace MangaBaseAPI.Domain.Common.Models
         public byte[] RowVersion { get; set; } = default!;
         public DateTimeOffset CreatedDateTime { get; set; }
         public DateTimeOffset? ModifiedDateTime { get; set; }
+
+        public virtual void SetModifyDateTime()
+        {
+            ModifiedDateTime = DateTimeOffset.UtcNow;
+        }
     }
 }

@@ -21,6 +21,13 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Property(x => x.RowVersion)
+                .IsRowVersion();
+
+            builder.Property(x => x.ModifiedDateTime)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
             // Seed data
             builder.HasData(new List<PasswordHistory>()
             {

@@ -1,5 +1,4 @@
 ﻿using MangaBaseAPI.Domain.Common.Models;
-using MangaBaseAPI.Domain.Constants.Role;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,7 +15,7 @@ namespace MangaBaseAPI.Domain.Entities
         public byte[] RowVersion { get; set; } = default!;
         public DateTimeOffset CreatedDateTime { get; set; }
         public DateTimeOffset? ModifiedDateTime { get; set; }
-
+        
         public ICollection<PasswordHistory> PasswordHistories { get; set; } = default!;
         public ICollection<Title> UploadedTitles { get; set; } = default!;
         public ICollection<TitleRating> TitleRatings { get; set; } = default!;
@@ -53,7 +52,7 @@ namespace MangaBaseAPI.Domain.Entities
             };
         }
 
-        public void SetUserModifyDateTime()
+        public void SetModifyDateTime()
         {
             ModifiedDateTime = DateTimeOffset.UtcNow;
         }

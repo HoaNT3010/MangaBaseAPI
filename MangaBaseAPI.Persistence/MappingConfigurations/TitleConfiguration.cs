@@ -19,6 +19,10 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
             builder.Property(x => x.CreatedDateTime)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET()");
 
+            builder.Property(x => x.ModifiedDateTime)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+
             builder.HasOne(x => x.Uploader)
                 .WithMany(u => u.UploadedTitles)
                 .HasForeignKey(x => x.UploaderId)
@@ -29,6 +33,8 @@ namespace MangaBaseAPI.Persistence.MappingConfigurations
 
             builder.HasIndex(x => x.Name)
                 .IsUnique();
+            builder.HasIndex(x => new { x.Type, x.Status });
+            builder.HasIndex(x => x.PublishedDate);
         }
     }
 }
