@@ -15,6 +15,8 @@ namespace MangaBaseAPI.Domain.Errors.User
 
         public static readonly Error Update_UpdatePersonalInformationFailed = Error.Failure("User.Update.UpdatePersonalInformationFailed", "Unexpected error(s) occurred when trying to update user personal information");
         public static readonly Error Update_UnchangedFullName = Error.Validation("User.Update.UnchangedFullName", "User's new full name is the same as the current value");
+        public static readonly Error Update_UserNameNotUnique = Error.Validation("User.Update.UserNameNotUnique", "User's new user name is already taken");
+        public static readonly Error Update_UnchangedUserName = Error.Validation("User.Update.UnchangedUserName", "User's new user name is the same as the current value");
 
         #endregion
     }
