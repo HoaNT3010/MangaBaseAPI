@@ -38,16 +38,15 @@ namespace MangaBaseAPI.Application.Users.Commands.UpdateFullName
             user.FirstName = request.FirstName.Trim();
             user.LastName = request.LastName.Trim();
             user.SetModifyDateTime();
-            try
+            var updateResult = await userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                await userManager.UpdateAsync(user);
-            }
-            catch (Exception e)
-            {
-                logger.LogError("Failed to update user's full name: {Message}", e.Message);
+                foreach (var error in updateResult.Errors)
+                {
+                    logger.LogError("Failed to update user's full name: {Code} - {Description}", error.Code, error.Description);
+                }
                 return Result.Failure(UserErrors.Update_UpdatePersonalInformationFailed);
             }
-
             await cache.RefreshAsync(UserCachingConstants.GetByIdKey + request.Id, cancellationToken);
             return Result.SuccessNullError();
         }

@@ -11,7 +11,7 @@ namespace MangaBaseAPI.WebAPI.Endpoints.Users
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("users/full-name", HandleUpdateUserFullName)
+            app.MapPut("users/fullname", HandleUpdateUserFullName)
                 .WithTags("Users")
                 .WithOpenApi(operation => new(operation)
                 {
