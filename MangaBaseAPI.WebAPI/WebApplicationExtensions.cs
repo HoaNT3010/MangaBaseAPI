@@ -25,21 +25,18 @@ namespace MangaBaseAPI.WebAPI
 
         public static WebApplication AddSwagger(this WebApplication application)
         {
-            if (application.Environment.IsDevelopment())
+            application.UseSwagger();
+            application.UseSwaggerUI(options =>
             {
-                application.UseSwagger();
-                application.UseSwaggerUI(options =>
+                var descriptions = application.DescribeApiVersions();
+                foreach (var description in descriptions)
                 {
-                    var descriptions = application.DescribeApiVersions();
-                    foreach (var description in descriptions)
-                    {
-                        string url = $"/swagger/{description.GroupName}/swagger.json";
-                        string name = description.GroupName.ToUpperInvariant();
+                    string url = $"/swagger/{description.GroupName}/swagger.json";
+                    string name = description.GroupName.ToUpperInvariant();
 
-                        options.SwaggerEndpoint(url, name);
-                    }
-                });
-            }
+                    options.SwaggerEndpoint(url, name);
+                }
+            });
             return application;
         }
 

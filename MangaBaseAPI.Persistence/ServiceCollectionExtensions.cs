@@ -1,21 +1,42 @@
-﻿using MangaBaseAPI.Domain.Entities;
+﻿using MangaBaseAPI.Domain.Constants.Application;
+using MangaBaseAPI.Domain.Entities;
 using MangaBaseAPI.Domain.Repositories;
 using MangaBaseAPI.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MangaBaseAPI.Persistence
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString)
+        const string DefaultConnectionString = "DefaultConnection";
+        const string ProductionConnectionString = "DefaultConnection_Production";
+
+        public static IServiceCollection AddPersistence(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            string environment = ApplicationConstants.DevelopmentEnvironment)
         {
             services.AddDbContext<MangaBaseDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                switch (environment)
+                {
+                    case ApplicationConstants.DevelopmentEnvironment:
+                        options.EnableSensitiveDataLogging();
+                        options.UseSqlServer(configuration.GetConnectionString(DefaultConnectionString));
+                        break;
+                    case ApplicationConstants.ProductionEnvironment:
+                        options.EnableSensitiveDataLogging(false);
+                        options.UseSqlServer(configuration.GetConnectionString(ProductionConnectionString));
+                        break;
+                    default:
+                        options.EnableSensitiveDataLogging(false);
+                        options.UseSqlServer(configuration.GetConnectionString(DefaultConnectionString));
+                        break;
+                }
             });
-
             services.AddIdentity<User, Role>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;

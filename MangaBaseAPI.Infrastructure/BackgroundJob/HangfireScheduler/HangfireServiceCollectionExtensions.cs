@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using MangaBaseAPI.CrossCuttingConcerns.BackgroundJob.HangfireScheduler;
+using MangaBaseAPI.Domain.Constants.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,15 +10,28 @@ namespace MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler
 {
     public static class HangfireServiceCollectionExtensions
     {
-        const string HangfireConnectionString = "HangfireDB";
+        const string DefaultHangfireConnectionString = "HangfireDB";
+        const string ProductionHangfireConnectionString = "HangfireDB_Production";
 
         public static IServiceCollection AddHangfireServices(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            string environment = ApplicationConstants.DevelopmentEnvironment)
         {
             services.AddHangfire(config =>
             {
-                config.UseSqlServerStorage(configuration.GetConnectionString(HangfireConnectionString));
+                switch (environment)
+                {
+                    case ApplicationConstants.DevelopmentEnvironment:
+                        config.UseSqlServerStorage(configuration.GetConnectionString(DefaultHangfireConnectionString));
+                        break;
+                    case ApplicationConstants.ProductionEnvironment:
+                        config.UseSqlServerStorage(configuration.GetConnectionString(ProductionHangfireConnectionString));
+                        break;
+                    default:
+                        config.UseSqlServerStorage(configuration.GetConnectionString(DefaultHangfireConnectionString));
+                        break;
+                }
                 config.UseSimpleAssemblyNameTypeSerializer();
                 config.UseRecommendedSerializerSettings();
             });

@@ -12,7 +12,6 @@ using MangaBaseAPI.Infrastructure.BackgroundJob.HangfireScheduler;
 using MangaBaseAPI.Infrastructure.Email.Gmail;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 {
     // Web API
     builder.Services
@@ -31,7 +30,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
     // Persistence
     builder.Services
-        .AddPersistence(connectionString!);
+        .AddPersistence(builder.Configuration, builder.Environment.EnvironmentName);
 
     // Infrastructure
     builder.Services
@@ -39,9 +38,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
         .AddJwtProvider()
         .AddAuthorizationPolicies()
         .AddSwagger()
-        .AddRedisCaching(builder.Configuration)
-        .AddStorageServices()
-        .AddHangfireServices(builder.Configuration)
+        .AddRedisCaching(builder.Configuration, builder.Environment.EnvironmentName)
+        .AddStorageServices(builder.Environment.EnvironmentName)
+        .AddHangfireServices(builder.Configuration, builder.Environment.EnvironmentName)
         .AddGmailEmailService(builder.Configuration);
 }
 
@@ -53,6 +52,7 @@ var app = builder.Build();
         .RegisterMiddlewares()
         .AddHangfireDashboard()
         .UseHealthChecks();
+
 
     app.Run();
 }

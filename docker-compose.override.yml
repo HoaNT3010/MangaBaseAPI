@@ -1,9 +1,10 @@
 services:
   mangabaseapi.webapi:
+    image: hoant3010/mangabaseapi.webapi:latest
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+    - ASPNETCORE_ENVIRONMENT=Production
+    - ASPNETCORE_HTTP_PORTS=8080
+    - ASPNETCORE_HTTPS_PORTS=8081
     ports:
       - "8080:8080"
       - "8081:8081"

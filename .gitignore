@@ -291,3 +291,4 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /MangaBaseAPI.WebAPI/appsettings.Production.json
+/MangaBaseAPI.WebAPI/Properties/ServiceDependencies/mangabase-webapi - Zip Deploy
