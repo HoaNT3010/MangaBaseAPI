@@ -37,6 +37,7 @@ namespace MangaBaseAPI.WebAPI
 
             services.AddCustomMiddlewares();
             services.ConfigureSerilog();
+            services.ConfigureCors();
 
             return services;
         }
@@ -87,6 +88,21 @@ namespace MangaBaseAPI.WebAPI
             services.AddLogging(builder =>
             {
                 builder.AddSerilog();
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureCors(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyHeader();
+                });
             });
 
             return services;

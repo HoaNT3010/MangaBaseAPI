@@ -12,6 +12,8 @@ namespace MangaBaseAPI.WebAPI
     {
         public static WebApplication RegisterPipelines(this WebApplication application)
         {
+            application.UseCors("AllowAll");
+
             application.UseHttpsRedirection();
 
             application.UseAuthorization();
