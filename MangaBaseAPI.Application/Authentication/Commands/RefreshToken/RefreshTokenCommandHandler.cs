@@ -38,19 +38,20 @@ namespace MangaBaseAPI.Application.Authentication.Commands.RefreshToken
 
             var userTokenRepository = _unitOfWork.GetRepository<IUserTokenRepository>();
             var userId = await userTokenRepository.GetUserIdByTokenValue(request.refreshToken, cancellationToken);
-            if (userId == default)
+            if (userId == Guid.Empty)
             {
                 return Result.Failure<RefreshTokenResponse>(RefreshTokenErrors.UserNotFound);
             }
 
             var user = await _userManager.FindByIdAsync(userId.ToString());
-            if (user == default)
+            if (user == null)
             {
                 return Result.Failure<RefreshTokenResponse>(RefreshTokenErrors.UserNotFound);
             }
 
             string refreshToken = _jwtTokenProvider.GenerateRefreshToken();
-            string accessToken = _jwtTokenProvider.GenerateAccessToken(user, new List<string>());
+            IList<string> roles = await _userManager.GetRolesAsync(user);
+            string accessToken = _jwtTokenProvider.GenerateAccessToken(user, roles);
 
             var tokenUpdateOperation = await _userManager.SetAuthenticationTokenAsync(user, UserTokenConstants.MangaBaseLoginProvider, UserTokenConstants.JwtRefreshTokenName, refreshToken);
 
