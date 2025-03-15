@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MangaBaseAPI.Contracts", "M
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81A5B4A5-7BB3-438E-BCA6-5753C9B208AC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaBaseAPI.UnitTests", "MangaBaseAPI.UnitTests\MangaBaseAPI.UnitTests.csproj", "{4587EE0F-3E59-4CDB-974C-99490EFC545C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +69,10 @@ Global
 		{81A5B4A5-7BB3-438E-BCA6-5753C9B208AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81A5B4A5-7BB3-438E-BCA6-5753C9B208AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81A5B4A5-7BB3-438E-BCA6-5753C9B208AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4587EE0F-3E59-4CDB-974C-99490EFC545C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4587EE0F-3E59-4CDB-974C-99490EFC545C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4587EE0F-3E59-4CDB-974C-99490EFC545C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4587EE0F-3E59-4CDB-974C-99490EFC545C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +85,7 @@ Global
 		{43831EF3-63DA-40A3-B28A-A5FF33049E2F} = {CB744C6F-9A85-4A51-A20A-57CB38106D67}
 		{21907CFF-8B6D-4D80-BDBC-89F73447ACE1} = {007B19F5-A4C4-4E1C-8179-92F5E31F0853}
 		{E61DD07C-E25D-4AC1-9644-14521D4F02C6} = {007B19F5-A4C4-4E1C-8179-92F5E31F0853}
+		{4587EE0F-3E59-4CDB-974C-99490EFC545C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD5DA6B7-897F-4645-9973-902409AACC32}
