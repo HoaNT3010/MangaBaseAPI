@@ -48,7 +48,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
                 return Result.Failure(RegisterErrors.EmailNotUnique);
             }
 
-            // Check if user name is unique
+            // Check if username is unique
             var isUserNameUnique = await _userManager.FindByNameAsync(request.UserName);
             if (isUserNameUnique != null)
             {
@@ -119,6 +119,7 @@ namespace MangaBaseAPI.Application.Authentication.Commands.Register
             catch (Exception ex)
             {
                 _logger.LogError("Failed to create email verification token for user {UserId}: {Message}", userId, ex.Message);
+                return;
             }
 
             _jobService.Enqueue<IGmailEmailService>(service => service.SendEmailAsync(
