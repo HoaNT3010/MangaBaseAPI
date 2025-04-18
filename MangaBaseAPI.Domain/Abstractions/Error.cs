@@ -1,4 +1,6 @@
-﻿namespace MangaBaseAPI.Domain.Abstractions
+﻿using System.Text.Json.Serialization;
+
+namespace MangaBaseAPI.Domain.Abstractions
 {
     public record Error
     {
@@ -44,6 +46,7 @@
         public static Error Unauthorized(string code, string description) =>
             new(code, description, ErrorType.Unauthorized);
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public object? Value { get; }
 
         public static Error NotFound(string code, string description, object value) =>
